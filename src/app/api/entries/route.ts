@@ -8,7 +8,9 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const validatedData = createEntrySchema.parse(body)
 
-    const id = validatedData.customUrl || generateId()
+    const id = validatedData.customUrl && validatedData.customUrl.trim() !== '' 
+      ? validatedData.customUrl 
+      : generateId()
     
     // Проверяем, не занят ли URL
     const existing = await prisma.entry.findUnique({
@@ -26,8 +28,12 @@ export async function POST(request: NextRequest) {
       data: {
         id,
         content: validatedData.content,
-        editCode: validatedData.editCode || generateCode(),
-        modifyCode: validatedData.modifyCode,
+        editCode: validatedData.editCode && validatedData.editCode.trim() !== ''
+          ? validatedData.editCode 
+          : generateCode(),
+        modifyCode: validatedData.modifyCode && validatedData.modifyCode.trim() !== ''
+          ? validatedData.modifyCode 
+          : undefined,
       },
     })
 

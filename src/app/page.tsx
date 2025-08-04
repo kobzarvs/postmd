@@ -56,18 +56,6 @@ export default function HomePage() {
         )}
 
         <EntryForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
-
-        <div className="mt-12 text-sm text-gray-600">
-          <h2 className="font-semibold text-lg text-gray-800 mb-4">Возможности:</h2>
-          <ul className="list-disc list-inside space-y-2">
-            <li>Поддержка полного синтаксиса Markdown с живым превью</li>
-            <li>Кастомные URL для ваших записей</li>
-            <li>Коды доступа для редактирования и модификации</li>
-            <li>Подсветка синтаксиса кода</li>
-            <li>Записи хранятся постоянно</li>
-            <li>Лимит текста: 200,000 символов</li>
-          </ul>
-        </div>
       </div>
     </div>
   )

@@ -7,21 +7,21 @@ export const createEntrySchema = z.object({
   content: z.string().min(1).max(200000),
   customUrl: z
     .string()
-    .min(2)
-    .max(100)
-    .regex(URL_REGEX, 'URL может содержать только латинские буквы, цифры, дефис и подчеркивание')
+    .refine((val) => val === '' || (val.length >= 2 && val.length <= 100 && URL_REGEX.test(val)), {
+      message: 'URL должен быть от 2 до 100 символов и содержать только латинские буквы, цифры, дефис и подчеркивание'
+    })
     .optional(),
   editCode: z
     .string()
-    .min(1)
-    .max(100)
-    .regex(CODE_REGEX, 'Код может содержать только латинские буквы, цифры, дефис и подчеркивание')
+    .refine((val) => val === '' || (val.length >= 1 && val.length <= 100 && CODE_REGEX.test(val)), {
+      message: 'Код должен быть от 1 до 100 символов и содержать только латинские буквы, цифры, дефис и подчеркивание'
+    })
     .optional(),
   modifyCode: z
     .string()
-    .min(1)
-    .max(100)
-    .regex(CODE_REGEX, 'Код может содержать только латинские буквы, цифры, дефис и подчеркивание')
+    .refine((val) => val === '' || (val.length >= 1 && val.length <= 100 && CODE_REGEX.test(val)), {
+      message: 'Код должен быть от 1 до 100 символов и содержать только латинские буквы, цифры, дефис и подчеркивание'
+    })
     .optional(),
 })
 
