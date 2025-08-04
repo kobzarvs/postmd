@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth/next'
 import { prisma } from '@/lib/db'
 import { createEntrySchema } from '@/lib/validation'
 import { generateId, generateCode } from '@/lib/utils'
+import { authOptions } from '@/lib/auth'
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getServerSession(authOptions)
     const body = await request.json()
     const validatedData = createEntrySchema.parse(body)
 
@@ -34,6 +37,7 @@ export async function POST(request: NextRequest) {
         modifyCode: validatedData.modifyCode && validatedData.modifyCode.trim() !== ''
           ? validatedData.modifyCode 
           : undefined,
+        userId: session?.user?.id || null,
       },
     })
 

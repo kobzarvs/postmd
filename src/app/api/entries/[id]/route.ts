@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { getServerSession } from 'next-auth/next'
 import { prisma } from '@/lib/db'
 import { updateEntrySchema } from '@/lib/validation'
+import { authOptions } from '@/lib/auth'
 
 export async function GET(
   request: NextRequest,
@@ -40,9 +42,16 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions)
     const { id } = await params
     const body = await request.json()
-    const validatedData = updateEntrySchema.parse(body)
+    
+    // Для авторизованных пользователей код не обязателен
+    const schema = session?.user?.id 
+      ? updateEntrySchema.omit({ code: true }).extend({ code: updateEntrySchema.shape.code.optional() })
+      : updateEntrySchema
+    
+    const validatedData = schema.parse(body)
 
     const entry = await prisma.entry.findUnique({
       where: { id },
@@ -55,13 +64,14 @@ export async function PUT(
       )
     }
 
-    // Проверяем код доступа
-    const isEditAllowed = validatedData.code === entry.editCode
-    const isModifyAllowed = validatedData.code === entry.modifyCode
+    // Проверяем права доступа
+    const isOwner = session?.user?.id && entry.userId === session.user.id
+    const isEditAllowed = validatedData.code && validatedData.code === entry.editCode
+    const isModifyAllowed = validatedData.code && validatedData.code === entry.modifyCode
 
-    if (!isEditAllowed && !isModifyAllowed) {
+    if (!isOwner && !isEditAllowed && !isModifyAllowed) {
       return NextResponse.json(
-        { error: 'Неверный код доступа' },
+        { error: 'Нет прав для редактирования этой записи' },
         { status: 403 }
       )
     }

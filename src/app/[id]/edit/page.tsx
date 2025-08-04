@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import MarkdownEditor from '@/components/MarkdownEditor'
 
@@ -13,11 +14,13 @@ export default function EditPage({}: PageProps) {
   const params = useParams()
   const id = params.id as string
   const router = useRouter()
+  const { data: session } = useSession()
   const [content, setContent] = useState('')
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [entryData, setEntryData] = useState<{ userId?: string } | null>(null)
 
   useEffect(() => {
     // Загружаем содержимое записи
@@ -26,6 +29,7 @@ export default function EditPage({}: PageProps) {
       .then((data) => {
         if (data.content) {
           setContent(data.content)
+          setEntryData(data)
         } else {
           setError('Запись не найдена')
         }
@@ -39,7 +43,9 @@ export default function EditPage({}: PageProps) {
   }, [id])
 
   const handleSubmit = async () => {
-    if (!code) {
+    const isOwner = session?.user?.id && entryData?.userId === session.user.id
+    
+    if (!isOwner && !code) {
       setError('Введите код доступа')
       return
     }
@@ -53,7 +59,10 @@ export default function EditPage({}: PageProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ content, code }),
+        body: JSON.stringify({ 
+          content, 
+          ...(code && { code }) // Добавляем код только если он введен
+        }),
       })
 
       if (!response.ok) {
@@ -100,19 +109,40 @@ export default function EditPage({}: PageProps) {
         )}
 
         <div className="space-y-4">
-          <div>
-            <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
-              Код доступа
-            </label>
-            <input
-              type="text"
-              id="code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="Введите код для редактирования или модификации"
-              className="w-full md:w-96 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
+          {/* Показываем поле кода только если пользователь не владелец записи */}
+          {!(session?.user?.id && entryData?.userId === session.user.id) && (
+            <div>
+              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
+                Код доступа
+              </label>
+              <input
+                type="text"
+                id="code"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                placeholder="Введите код для редактирования или модификации"
+                className="w-full md:w-96 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            </div>
+          )}
+
+          {/* Показываем информацию для владельца */}
+          {session?.user?.id && entryData?.userId === session.user.id && (
+            <div className="bg-green-50 border border-green-200 rounded-md p-4">
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm text-green-800">
+                    Это ваша запись. Вы можете редактировать её без кода доступа.
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
 
           <MarkdownEditor
             value={content}
@@ -126,7 +156,10 @@ export default function EditPage({}: PageProps) {
             </p>
             <button
               onClick={handleSubmit}
-              disabled={isSubmitting || !code}
+              disabled={
+                isSubmitting || 
+                (!(session?.user?.id && entryData?.userId === session.user.id) && !code)
+              }
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}

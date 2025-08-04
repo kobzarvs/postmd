@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import EntryForm from '@/components/EntryForm'
+import AuthButton from '@/components/AuthButton'
 import { type CreateEntryInput } from '@/lib/validation'
 
 export default function HomePage() {
@@ -42,11 +43,14 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">PostMD</h1>
-          <p className="text-gray-600 mt-2">
-            Простой сервис для публикации текстов в формате Markdown
-          </p>
+        <header className="mb-8 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">PostMD</h1>
+            <p className="text-gray-600 mt-2">
+              Простой сервис для публикации текстов в формате Markdown
+            </p>
+          </div>
+          <AuthButton />
         </header>
 
         {error && (
