@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import MarkdownViewer from './MarkdownViewer'
+import { markdown, markdownLanguage } from '@codemirror/lang-markdown'
+import { languages } from '@codemirror/language-data'
 
-const MDEditor = dynamic(
-  () => import('@uiw/react-md-editor').then((mod) => mod.default),
+const CodeMirror = dynamic(
+  () => import('@uiw/react-codemirror').then((mod) => mod.default),
   { ssr: false }
 )
+
+const extensions = [markdown({ base: markdownLanguage, codeLanguages: languages })]
 
 interface MarkdownEditorProps {
   value: string
@@ -25,6 +27,7 @@ export default function MarkdownEditor({
   onSubmit,
 }: MarkdownEditorProps) {
   const [mounted, setMounted] = useState(false)
+  const [tab, setTab] = useState<'edit' | 'preview'>('edit')
 
   useEffect(() => {
     setMounted(true)
@@ -56,40 +59,38 @@ export default function MarkdownEditor({
   }
 
   return (
-    <div className="w-full" data-color-mode="light">
-      <MDEditor
-        value={value}
-        onChange={(val) => onChange(val || '')}
-        preview="live"
-        height={500}
-        textareaProps={{
-          placeholder,
-        }}
-        previewOptions={{
-          components: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            code({ inline, className, children, ...props }: any) {
-              const match = /language-(\w+)/.exec(className || '')
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  style={oneDark as any}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              )
-            },
-          },
-          remarkPlugins: [remarkGfm],
-        }}
-      />
+    <div className="w-full">
+      <div className="flex border-b mb-2">
+        <button
+          type="button"
+          className={`px-4 py-2 -mb-px ${tab === 'edit' ? 'border-b-2 border-blue-500' : 'text-gray-500'}`}
+          onClick={() => setTab('edit')}
+        >
+          Редактор
+        </button>
+        <button
+          type="button"
+          className={`px-4 py-2 -mb-px ${tab === 'preview' ? 'border-b-2 border-blue-500' : 'text-gray-500'}`}
+          onClick={() => setTab('preview')}
+        >
+          Preview
+        </button>
+      </div>
+      {tab === 'edit' ? (
+        <CodeMirror
+          value={value}
+          height="500px"
+          extensions={extensions}
+          onChange={(val) => onChange(val)}
+          placeholder={placeholder}
+          className="border border-gray-300 rounded-lg"
+        />
+      ) : (
+        <div className="min-h-[500px] border border-gray-300 rounded-lg p-4">
+          <MarkdownViewer content={value} />
+        </div>
+      )}
     </div>
   )
 }
+
