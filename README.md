@@ -49,6 +49,14 @@ npm run dev
 
 Приложение будет доступно по адресу http://localhost:3000
 
+## Разработка
+
+Перед коммитом всегда проверяйте код:
+```bash
+npm run check  # ESLint + TypeScript проверка
+npm run build  # Проверка сборки
+```
+
 ## Деплой на Vercel
 
 1. Создайте проект на [Vercel](https://vercel.com)
