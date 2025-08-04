@@ -54,7 +54,7 @@ export default async function EntryPage({ params }: PageProps) {
         </header>
 
         <div className="bg-white rounded-lg shadow-sm p-8">
-          <div className="flex items-center justify-between mb-6 text-sm text-gray-500">
+          <div className="flex items-center justify-between mb-6 text-gray-500">
             <span>Создано: {new Date(entry.createdAt).toLocaleString('ru-RU')}</span>
             <ViewCounter entryId={id} initialViews={entry.views} />
           </div>
@@ -64,7 +64,7 @@ export default async function EntryPage({ params }: PageProps) {
           </div>
 
           {entry.updatedAt > entry.createdAt && (
-            <div className="mt-8 pt-8 border-t text-sm text-gray-500">
+            <div className="mt-8 pt-8 border-t text-gray-500">
               Обновлено: {new Date(entry.updatedAt).toLocaleString('ru-RU')}
             </div>
           )}

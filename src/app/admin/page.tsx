@@ -24,45 +24,45 @@ export default async function AdminPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Всего записей</h3>
+            <h3 className="font-semibold text-gray-900">Всего записей</h3>
             <p className="text-3xl font-bold text-blue-600">{stats._count.id}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Всего просмотров</h3>
+            <h3 className="font-semibold text-gray-900">Всего просмотров</h3>
             <p className="text-3xl font-bold text-green-600">{stats._sum.views || 0}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Средний размер</h3>
+            <h3 className="font-semibold text-gray-900">Средний размер</h3>
             <p className="text-3xl font-bold text-purple-600">
               {Math.round(
                 entries.reduce((acc, entry) => acc + entry.content.length, 0) / entries.length || 0
               )}
-              <span className="text-sm text-gray-500"> символов</span>
+              <span className="text-gray-500"> символов</span>
             </p>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Последние записи</h2>
+            <h2 className="font-semibold text-gray-900">Последние записи</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                     ID
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                     Содержимое
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                     Просмотры
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                     Создано
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left font-medium text-gray-500 uppercase tracking-wider">
                     Действия
                   </th>
                 </tr>
@@ -70,27 +70,27 @@ export default async function AdminPage() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {entries.map((entry) => (
                   <tr key={entry.id}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
+                    <td className="px-6 py-4 whitespace-nowrap font-medium text-blue-600">
                       <Link href={`/${entry.id}`} className="hover:text-blue-800">
                         {entry.id}
                       </Link>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 max-w-xs">
+                    <td className="px-6 py-4 text-gray-900 max-w-xs">
                       <div className="truncate">
                         {entry.content.substring(0, 100)}
                         {entry.content.length > 100 && '...'}
                       </div>
-                      <div className="text-xs text-gray-500">
+                      <div className="text-gray-500">
                         {entry.content.length} символов
                       </div>
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900">
                       {entry.views}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">
                       {new Date(entry.createdAt).toLocaleString('ru-RU')}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-500">
                       <Link
                         href={`/${entry.id}`}
                         className="text-blue-600 hover:text-blue-800 mr-3"

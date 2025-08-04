@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { prisma } from '@/lib/db'
 import { updateEntrySchema } from '@/lib/validation'
 import { authOptions } from '@/lib/auth'
+import type { Session } from 'next-auth'
 
 export async function GET(
   request: NextRequest,
@@ -42,7 +43,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as Session | null
     const { id } = await params
     const body = await request.json()
     
@@ -67,16 +68,14 @@ export async function PUT(
     // Проверяем права доступа
     const isOwner = session?.user?.id && entry.userId === session.user.id
     const isEditAllowed = validatedData.code && validatedData.code === entry.editCode
-    const isModifyAllowed = validatedData.code && validatedData.code === entry.modifyCode
 
-    if (!isOwner && !isEditAllowed && !isModifyAllowed) {
+    if (!isOwner && !isEditAllowed) {
       return NextResponse.json(
         { error: 'Нет прав для редактирования этой записи' },
         { status: 403 }
       )
     }
 
-    // modifyCode позволяет только изменять текст
     const updatedEntry = await prisma.entry.update({
       where: { id },
       data: {

@@ -1,15 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import EntryForm from '@/components/EntryForm'
 import AuthButton from '@/components/AuthButton'
+import PostCreatedModal from '@/components/PostCreatedModal'
+import MarkdownViewer from '@/components/MarkdownViewer'
 import { type CreateEntryInput } from '@/lib/validation'
 
 export default function HomePage() {
-  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [showModal, setShowModal] = useState(false)
+  const [createdPost, setCreatedPost] = useState<{ id: string; editCode: string | null; content: string } | null>(null)
 
   const handleSubmit = async (data: CreateEntryInput) => {
     setIsSubmitting(true)
@@ -30,9 +32,14 @@ export default function HomePage() {
       }
 
       const result = await response.json()
-      
-      // Перенаправляем на страницу записи
-      router.push(`/${result.id}`)
+
+      // Показываем модальное окно вместо перенаправления
+      setCreatedPost({
+        id: result.id,
+        editCode: result.editCode,
+        content: data.content
+      })
+      setShowModal(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла неизвестная ошибка')
     } finally {
@@ -47,7 +54,7 @@ export default function HomePage() {
           <div>
             <h1 className="text-3xl font-bold text-gray-900">PostMD</h1>
             <p className="text-gray-600 mt-2">
-              Простой сервис для публикации текстов в формате Markdown
+              Простой сервис для публикации постов в формате Markdown
             </p>
           </div>
           <AuthButton />
@@ -59,7 +66,25 @@ export default function HomePage() {
           </div>
         )}
 
-        <EntryForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        {createdPost && showModal ? (
+          <div className="bg-white rounded-lg shadow-md p-8">
+            <MarkdownViewer content={createdPost.content} />
+          </div>
+        ) : (
+          <EntryForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
+        )}
+
+        {createdPost && (
+          <PostCreatedModal
+            isOpen={showModal}
+            onClose={() => {
+              setShowModal(false)
+              setCreatedPost(null)
+            }}
+            postId={createdPost.id}
+            editCode={createdPost.editCode}
+          />
+        )}
       </div>
     </div>
   )

@@ -4,10 +4,11 @@ import { prisma } from '@/lib/db'
 import { createEntrySchema } from '@/lib/validation'
 import { generateId, generateCode } from '@/lib/utils'
 import { authOptions } from '@/lib/auth'
+import type { Session } from 'next-auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions) as Session | null
     const body = await request.json()
     const validatedData = createEntrySchema.parse(body)
 
@@ -34,9 +35,6 @@ export async function POST(request: NextRequest) {
         editCode: validatedData.editCode && validatedData.editCode.trim() !== ''
           ? validatedData.editCode 
           : generateCode(),
-        modifyCode: validatedData.modifyCode && validatedData.modifyCode.trim() !== ''
-          ? validatedData.modifyCode 
-          : undefined,
         userId: session?.user?.id || null,
       },
     })
@@ -44,7 +42,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       id: entry.id,
       editCode: entry.editCode,
-      modifyCode: entry.modifyCode,
     })
   } catch (error) {
     if (error instanceof Error) {

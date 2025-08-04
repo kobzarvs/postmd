@@ -77,7 +77,7 @@ export default function SignIn() {
           <h1 className="text-center text-3xl font-bold text-gray-900">
             Вход в PostMD
           </h1>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-gray-600">
             Выберите способ входа
           </p>
         </div>
@@ -88,11 +88,11 @@ export default function SignIn() {
               <button
                 key={provider.name}
                 onClick={() => signIn(provider.id, { callbackUrl })}
-                className={`w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm text-sm font-medium transition-colors ${getProviderColor(
+                className={`w-full flex items-center justify-center px-4 py-3 border border-transparent rounded-md shadow-sm font-medium transition-colors ${getProviderColor(
                   provider.id
                 )}`}
               >
-                <span className="mr-3 text-lg">
+                <span className="mr-3">
                   {getProviderIcon(provider.id)}
                 </span>
                 Войти через {provider.name}
@@ -103,13 +103,13 @@ export default function SignIn() {
         <div className="text-center">
           <Link
             href="/"
-            className="text-sm text-blue-600 hover:text-blue-800 transition-colors"
+            className="text-blue-600 hover:text-blue-800 transition-colors"
           >
             ← Вернуться на главную
           </Link>
         </div>
 
-        <div className="text-center text-xs text-gray-500">
+        <div className="text-center text-gray-500">
           <p>
             Авторизация позволяет привязать записи к вашему аккаунту
             <br />

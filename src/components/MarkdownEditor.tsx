@@ -32,7 +32,7 @@ export default function MarkdownEditor({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.key === 'Enter' && onSubmit) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter' && onSubmit) {
         e.preventDefault()
         onSubmit()
       }

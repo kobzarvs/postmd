@@ -27,7 +27,7 @@ export default async function RawPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50 p-4">
-      <pre className="whitespace-pre-wrap font-mono text-sm">
+      <pre className="whitespace-pre-wrap font-mono">
         {entry.content}
       </pre>
     </div>

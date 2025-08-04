@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
 import MarkdownEditor from '@/components/MarkdownEditor'
+import type { Session } from 'next-auth'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -14,7 +15,7 @@ export default function EditPage({}: PageProps) {
   const params = useParams()
   const id = params.id as string
   const router = useRouter()
-  const { data: session } = useSession()
+  const { data: session } = useSession() as { data: Session | null }
   const [content, setContent] = useState('')
   const [code, setCode] = useState('')
   const [isLoading, setIsLoading] = useState(true)
@@ -112,7 +113,7 @@ export default function EditPage({}: PageProps) {
           {/* Показываем поле кода только если пользователь не владелец записи */}
           {!(session?.user?.id && entryData?.userId === session.user.id) && (
             <div>
-              <label htmlFor="code" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="code" className="block font-medium text-gray-700 mb-1">
                 Код доступа
               </label>
               <input
@@ -136,7 +137,7 @@ export default function EditPage({}: PageProps) {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm text-green-800">
+                  <p className="text-green-800">
                     Это ваша запись. Вы можете редактировать её без кода доступа.
                   </p>
                 </div>
@@ -151,7 +152,7 @@ export default function EditPage({}: PageProps) {
           />
 
           <div className="flex justify-between items-center">
-            <p className="text-sm text-gray-600">
+            <p className="text-gray-600">
               Нажмите Ctrl+Enter для быстрого сохранения
             </p>
             <button

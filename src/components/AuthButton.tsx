@@ -32,7 +32,7 @@ export default function AuthButton() {
               className="w-8 h-8 rounded-full"
             />
           )}
-          <span className="text-sm font-medium">
+          <span className="font-medium">
             {session.user?.name || session.user?.email}
           </span>
           <svg
@@ -51,7 +51,7 @@ export default function AuthButton() {
           <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
             <Link
               href="/profile"
-              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
               onClick={() => setShowDropdown(false)}
             >
               Мои записи
@@ -61,7 +61,7 @@ export default function AuthButton() {
                 setShowDropdown(false)
                 signOut()
               }}
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
             >
               Выйти
             </button>
@@ -74,7 +74,7 @@ export default function AuthButton() {
   return (
     <button
       onClick={() => signIn()}
-      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
+      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
     >
       Войти
     </button>

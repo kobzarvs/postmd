@@ -3,9 +3,10 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
+import type { Session } from 'next-auth'
 
 export default async function ProfilePage() {
-  const session = await getServerSession(authOptions)
+  const session = await getServerSession(authOptions) as Session | null
 
   if (!session) {
     redirect('/auth/signin?callbackUrl=/profile')
@@ -13,7 +14,7 @@ export default async function ProfilePage() {
 
   const userEntries = await prisma.entry.findMany({
     where: {
-      userId: session.user.id,
+      userId: session!.user.id,
     },
     orderBy: {
       createdAt: 'desc',
@@ -22,7 +23,7 @@ export default async function ProfilePage() {
 
   const stats = await prisma.entry.aggregate({
     where: {
-      userId: session.user.id,
+      userId: session!.user.id,
     },
     _count: { id: true },
     _sum: { views: true },
@@ -48,18 +49,18 @@ export default async function ProfilePage() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Моих записей</h3>
+            <h3 className="font-semibold text-gray-900">Моих записей</h3>
             <p className="text-3xl font-bold text-blue-600">{stats._count.id}</p>
           </div>
           <div className="bg-white p-6 rounded-lg shadow">
-            <h3 className="text-lg font-semibold text-gray-900">Всего просмотров</h3>
+            <h3 className="font-semibold text-gray-900">Всего просмотров</h3>
             <p className="text-3xl font-bold text-green-600">{stats._sum.views || 0}</p>
           </div>
         </div>
 
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-xl font-semibold text-gray-900">Мои записи</h2>
+            <h2 className="font-semibold text-gray-900">Мои записи</h2>
           </div>
 
           {userEntries.length === 0 ? (
@@ -80,7 +81,7 @@ export default async function ProfilePage() {
                     <div className="flex-1">
                       <Link
                         href={`/${entry.id}`}
-                        className="text-lg font-medium text-blue-600 hover:text-blue-800 transition-colors"
+                        className="font-medium text-blue-600 hover:text-blue-800 transition-colors"
                       >
                         {entry.id}
                       </Link>
@@ -88,7 +89,7 @@ export default async function ProfilePage() {
                         {entry.content.substring(0, 150)}
                         {entry.content.length > 150 && '...'}
                       </p>
-                      <div className="flex items-center mt-3 text-sm text-gray-500 space-x-4">
+                      <div className="flex items-center mt-3 text-gray-500 space-x-4">
                         <span>{entry.views} просмотров</span>
                         <span>
                           {new Date(entry.createdAt).toLocaleDateString('ru-RU')}
@@ -99,13 +100,13 @@ export default async function ProfilePage() {
                     <div className="ml-4 flex-shrink-0 space-x-2">
                       <Link
                         href={`/${entry.id}`}
-                        className="text-blue-600 hover:text-blue-800 transition-colors text-sm"
+                        className="text-blue-600 hover:text-blue-800 transition-colors"
                       >
                         Просмотр
                       </Link>
                       <Link
                         href={`/${entry.id}/edit`}
-                        className="text-green-600 hover:text-green-800 transition-colors text-sm"
+                        className="text-green-600 hover:text-green-800 transition-colors"
                       >
                         Редактировать
                       </Link>

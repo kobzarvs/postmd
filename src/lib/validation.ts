@@ -17,12 +17,6 @@ export const createEntrySchema = z.object({
       message: 'Код должен быть от 1 до 100 символов и содержать только латинские буквы, цифры, дефис и подчеркивание'
     })
     .optional(),
-  modifyCode: z
-    .string()
-    .refine((val) => val === '' || (val.length >= 1 && val.length <= 100 && CODE_REGEX.test(val)), {
-      message: 'Код должен быть от 1 до 100 символов и содержать только латинские буквы, цифры, дефис и подчеркивание'
-    })
-    .optional(),
 })
 
 export const updateEntrySchema = z.object({
