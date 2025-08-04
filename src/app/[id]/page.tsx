@@ -1,0 +1,74 @@
+import { notFound } from 'next/navigation'
+import Link from 'next/link'
+import { prisma } from '@/lib/db'
+import MarkdownViewer from '@/components/MarkdownViewer'
+import ViewCounter from '@/components/ViewCounter'
+
+interface PageProps {
+  params: { id: string }
+}
+
+async function getEntry(id: string) {
+  try {
+    const entry = await prisma.entry.findUnique({
+      where: { id },
+    })
+    return entry
+  } catch {
+    return null
+  }
+}
+
+export default async function EntryPage({ params }: PageProps) {
+  const entry = await getEntry(params.id)
+
+  if (!entry) {
+    notFound()
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <header className="mb-8 flex items-center justify-between">
+          <Link 
+            href="/"
+            className="text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            ← Новая запись
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link
+              href={`/${params.id}/raw`}
+              className="text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Raw
+            </Link>
+            <Link
+              href={`/${params.id}/edit`}
+              className="text-gray-600 hover:text-gray-800 transition-colors"
+            >
+              Редактировать
+            </Link>
+          </div>
+        </header>
+
+        <div className="bg-white rounded-lg shadow-sm p-8">
+          <div className="flex items-center justify-between mb-6 text-sm text-gray-500">
+            <span>Создано: {new Date(entry.createdAt).toLocaleString('ru-RU')}</span>
+            <ViewCounter entryId={params.id} initialViews={entry.views} />
+          </div>
+
+          <div className="prose prose-gray max-w-none">
+            <MarkdownViewer content={entry.content} />
+          </div>
+
+          {entry.updatedAt > entry.createdAt && (
+            <div className="mt-8 pt-8 border-t text-sm text-gray-500">
+              Обновлено: {new Date(entry.updatedAt).toLocaleString('ru-RU')}
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}

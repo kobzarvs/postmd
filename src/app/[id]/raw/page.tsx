@@ -1,0 +1,34 @@
+import { notFound } from 'next/navigation'
+import { prisma } from '@/lib/db'
+
+interface PageProps {
+  params: { id: string }
+}
+
+async function getEntry(id: string) {
+  try {
+    const entry = await prisma.entry.findUnique({
+      where: { id },
+      select: { content: true },
+    })
+    return entry
+  } catch {
+    return null
+  }
+}
+
+export default async function RawPage({ params }: PageProps) {
+  const entry = await getEntry(params.id)
+
+  if (!entry) {
+    notFound()
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-4">
+      <pre className="whitespace-pre-wrap font-mono text-sm">
+        {entry.content}
+      </pre>
+    </div>
+  )
+}
