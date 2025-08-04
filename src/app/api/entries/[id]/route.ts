@@ -4,11 +4,12 @@ import { updateEntrySchema } from '@/lib/validation'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const entry = await prisma.entry.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!entry) {
@@ -36,14 +37,15 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const body = await request.json()
     const validatedData = updateEntrySchema.parse(body)
 
     const entry = await prisma.entry.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!entry) {
@@ -66,7 +68,7 @@ export async function PUT(
 
     // modifyCode позволяет только изменять текст
     const updatedEntry = await prisma.entry.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         content: validatedData.content,
       },
@@ -93,9 +95,10 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
 
@@ -107,7 +110,7 @@ export async function DELETE(
     }
 
     const entry = await prisma.entry.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!entry) {
@@ -125,7 +128,7 @@ export async function DELETE(
     }
 
     await prisma.entry.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ success: true })

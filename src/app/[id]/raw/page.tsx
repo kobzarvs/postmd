@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/db'
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getEntry(id: string) {
@@ -18,7 +18,8 @@ async function getEntry(id: string) {
 }
 
 export default async function RawPage({ params }: PageProps) {
-  const entry = await getEntry(params.id)
+  const { id } = await params
+  const entry = await getEntry(id)
 
   if (!entry) {
     notFound()

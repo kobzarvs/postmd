@@ -5,7 +5,7 @@ import MarkdownViewer from '@/components/MarkdownViewer'
 import ViewCounter from '@/components/ViewCounter'
 
 interface PageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getEntry(id: string) {
@@ -20,7 +20,8 @@ async function getEntry(id: string) {
 }
 
 export default async function EntryPage({ params }: PageProps) {
-  const entry = await getEntry(params.id)
+  const { id } = await params
+  const entry = await getEntry(id)
 
   if (!entry) {
     notFound()
@@ -38,13 +39,13 @@ export default async function EntryPage({ params }: PageProps) {
           </Link>
           <div className="flex items-center gap-4">
             <Link
-              href={`/${params.id}/raw`}
+              href={`/${id}/raw`}
               className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               Raw
             </Link>
             <Link
-              href={`/${params.id}/edit`}
+              href={`/${id}/edit`}
               className="text-gray-600 hover:text-gray-800 transition-colors"
             >
               Редактировать
@@ -55,7 +56,7 @@ export default async function EntryPage({ params }: PageProps) {
         <div className="bg-white rounded-lg shadow-sm p-8">
           <div className="flex items-center justify-between mb-6 text-sm text-gray-500">
             <span>Создано: {new Date(entry.createdAt).toLocaleString('ru-RU')}</span>
-            <ViewCounter entryId={params.id} initialViews={entry.views} />
+            <ViewCounter entryId={id} initialViews={entry.views} />
           </div>
 
           <div className="prose prose-gray max-w-none">

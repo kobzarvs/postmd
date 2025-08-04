@@ -1,15 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import MarkdownEditor from '@/components/MarkdownEditor'
 
-interface PageProps {
-  params: { id: string }
-}
-
-export default function EditPage({ params }: PageProps) {
+export default function EditPage() {
+  const params = useParams()
+  const id = params.id as string
   const router = useRouter()
   const [content, setContent] = useState('')
   const [code, setCode] = useState('')
@@ -19,7 +17,7 @@ export default function EditPage({ params }: PageProps) {
 
   useEffect(() => {
     // Загружаем содержимое записи
-    fetch(`/api/entries/${params.id}`)
+    fetch(`/api/entries/${id}`)
       .then((res) => res.json())
       .then((data) => {
         if (data.content) {
@@ -34,7 +32,7 @@ export default function EditPage({ params }: PageProps) {
       .finally(() => {
         setIsLoading(false)
       })
-  }, [params.id])
+  }, [id])
 
   const handleSubmit = async () => {
     if (!code) {
@@ -46,7 +44,7 @@ export default function EditPage({ params }: PageProps) {
     setError(null)
 
     try {
-      const response = await fetch(`/api/entries/${params.id}`, {
+      const response = await fetch(`/api/entries/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +57,7 @@ export default function EditPage({ params }: PageProps) {
         throw new Error(errorData.error || 'Ошибка при обновлении записи')
       }
 
-      router.push(`/${params.id}`)
+      router.push(`/${id}`)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла неизвестная ошибка')
     } finally {
@@ -80,7 +78,7 @@ export default function EditPage({ params }: PageProps) {
       <div className="max-w-6xl mx-auto px-4 py-8">
         <header className="mb-8 flex items-center justify-between">
           <Link 
-            href={`/${params.id}`}
+            href={`/${id}`}
             className="text-blue-600 hover:text-blue-800 transition-colors"
           >
             ← Назад к записи
