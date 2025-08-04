@@ -5,7 +5,11 @@ import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
 import MarkdownEditor from '@/components/MarkdownEditor'
 
-export default function EditPage() {
+interface PageProps {
+  params: Promise<{ id: string }>
+}
+
+export default function EditPage({}: PageProps) {
   const params = useParams()
   const id = params.id as string
   const router = useRouter()
