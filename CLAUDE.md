@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Essential Commands
 - `npm run dev` - Start development server with Turbopack
-- `npm run check` - Run ESLint + TypeScript checks (always run before commits)
+- `npm run check` - Run ESLint +   (always run before commits)
 - `npm run build` - Full production build with Prisma generation
 
 ### Database Commands
