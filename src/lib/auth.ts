@@ -36,10 +36,15 @@ if (process.env.OAUTH_TWITTER_ID && process.env.OAUTH_TWITTER_SECRET) {
   )
 }
 
+// Если нет ни одного провайдера, добавляем заглушку для предотвращения ошибок
+if (providers.length === 0) {
+  console.warn('No OAuth providers configured. Add OAUTH_* environment variables to enable authentication.')
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const authOptions: any = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  adapter: PrismaAdapter(prisma) as any,
+  adapter: providers.length > 0 ? PrismaAdapter(prisma) as any : undefined,
   providers,
   session: {
     strategy: 'jwt',
@@ -63,4 +68,5 @@ export const authOptions: any = {
   pages: {
     signIn: '/auth/signin',
   },
+  secret: process.env.NEXTAUTH_SECRET,
 }

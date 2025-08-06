@@ -83,7 +83,7 @@ export default function SignInClient() {
         </div>
 
         <div className="space-y-4">
-          {providers &&
+          {providers && Object.keys(providers).length > 0 ? (
             Object.values(providers).map((provider) => (
               <button
                 key={provider.name}
@@ -97,7 +97,17 @@ export default function SignInClient() {
                 </span>
                 Войти через {provider.name}
               </button>
-            ))}
+            ))
+          ) : (
+            <div className="text-center p-8 bg-yellow-50 rounded-lg">
+              <p className="text-yellow-800">
+                Авторизация временно недоступна
+              </p>
+              <p className="text-sm text-yellow-600 mt-2">
+                OAuth провайдеры не настроены. Вы можете создавать записи анонимно.
+              </p>
+            </div>
+          )}
         </div>
 
         <div className="text-center">
