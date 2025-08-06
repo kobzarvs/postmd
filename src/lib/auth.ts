@@ -4,25 +4,43 @@ import GitHubProvider from 'next-auth/providers/github'
 import GoogleProvider from 'next-auth/providers/google'
 import TwitterProvider from 'next-auth/providers/twitter'
 
+// Создаём массив провайдеров только если есть соответствующие переменные окружения
+const providers = []
+
+// Используем префикс OAUTH_ чтобы избежать конфликта с зарезервированными именами GitHub
+if (process.env.OAUTH_GITHUB_ID && process.env.OAUTH_GITHUB_SECRET) {
+  providers.push(
+    GitHubProvider({
+      clientId: process.env.OAUTH_GITHUB_ID,
+      clientSecret: process.env.OAUTH_GITHUB_SECRET,
+    })
+  )
+}
+
+if (process.env.OAUTH_GOOGLE_ID && process.env.OAUTH_GOOGLE_SECRET) {
+  providers.push(
+    GoogleProvider({
+      clientId: process.env.OAUTH_GOOGLE_ID,
+      clientSecret: process.env.OAUTH_GOOGLE_SECRET,
+    })
+  )
+}
+
+if (process.env.OAUTH_TWITTER_ID && process.env.OAUTH_TWITTER_SECRET) {
+  providers.push(
+    TwitterProvider({
+      clientId: process.env.OAUTH_TWITTER_ID,
+      clientSecret: process.env.OAUTH_TWITTER_SECRET,
+      version: "2.0",
+    })
+  )
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const authOptions: any = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   adapter: PrismaAdapter(prisma) as any,
-  providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID!,
-      clientSecret: process.env.GITHUB_SECRET!,
-    }),
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    TwitterProvider({
-      clientId: process.env.TWITTER_CLIENT_ID!,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
-      version: "2.0",
-    }),
-  ],
+  providers,
   session: {
     strategy: 'jwt',
   },

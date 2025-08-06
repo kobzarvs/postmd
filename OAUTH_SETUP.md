@@ -10,17 +10,17 @@
 NEXTAUTH_URL="https://your-domain.vercel.app"
 NEXTAUTH_SECRET="your-random-secret-key-here"
 
-# GitHub OAuth
-GITHUB_ID="your-github-oauth-app-id"
-GITHUB_SECRET="your-github-oauth-app-secret"
+# GitHub OAuth (префикс OAUTH_ чтобы избежать конфликта с GitHub Actions)
+OAUTH_GITHUB_ID="your-github-oauth-app-id"
+OAUTH_GITHUB_SECRET="your-github-oauth-app-secret"
 
 # Google OAuth  
-GOOGLE_CLIENT_ID="your-google-oauth-client-id"
-GOOGLE_CLIENT_SECRET="your-google-oauth-client-secret"
+OAUTH_GOOGLE_ID="your-google-oauth-client-id"
+OAUTH_GOOGLE_SECRET="your-google-oauth-client-secret"
 
 # Twitter OAuth
-TWITTER_CLIENT_ID="your-twitter-oauth-client-id" 
-TWITTER_CLIENT_SECRET="your-twitter-oauth-client-secret"
+OAUTH_TWITTER_ID="your-twitter-oauth-client-id" 
+OAUTH_TWITTER_SECRET="your-twitter-oauth-client-secret"
 ```
 
 ## 🐙 GitHub OAuth Setup
