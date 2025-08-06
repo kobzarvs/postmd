@@ -17,7 +17,7 @@
 - **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes
 - **База данных**: PostgreSQL + Prisma ORM
-- **Markdown**: @uiw/react-md-editor, react-markdown
+- **Markdown**: react-mde, react-markdown
 - **Деплой**: Vercel
 
 ## Установка и запуск
