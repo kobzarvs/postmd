@@ -95,34 +95,33 @@ export default function EditPage({ }: PageProps) {
   }
 
   return (
-    <div className="bg-gray-50 h-screen">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="mb-2 flex items-center justify-between">
+    <div className="bg-gray-50 min-h-screen">
+      <div className="max-w-6xl mx-auto px-3 xs:px-4 py-4 xs:py-6 md:py-8">
+        <header className="mb-4 xs:mb-6">
           <Link
             href={`/${id}`}
-            className="text-blue-600 hover:text-blue-800 transition-colors"
+            className="text-blue-600 hover:text-blue-800 transition-colors text-sm xs:text-base touch-target"
           >
             ← Назад к записи
           </Link>
         </header>
 
-        <div className="flex justify-between items-center mb-4">
-          <div className="text-2xl font-bold text-gray-900">
+        <div className="mb-4 xs:mb-6">
+          <h1 className="text-xl xs:text-2xl font-bold text-gray-900">
             Редактирование записи
-          </div>
+          </h1>
         </div>
 
-
         {error && (
-          <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md fixed left-1/2 top-0 transform -translate-x-1/2 w-96">
-            <p className="text-red-600">{error}</p>
+          <div className="mb-4 p-3 xs:p-4 bg-red-50 border border-red-200 rounded-md">
+            <p className="text-red-600 text-sm xs:text-base">{error}</p>
           </div>
         )}
 
         <div className="space-y-4">
           {/* Показываем информацию для владельца */}
           {isOwner && (
-            <div className="bg-green-50 border border-green-200 rounded-md p-4">
+            <div className="bg-green-50 border border-green-200 rounded-md p-3 xs:p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
                   <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
@@ -130,7 +129,7 @@ export default function EditPage({ }: PageProps) {
                   </svg>
                 </div>
                 <div className="ml-3">
-                  <p className="text-green-800">
+                  <p className="text-green-800 text-sm xs:text-base">
                     Это ваша запись. Вы можете редактировать её без кода доступа.
                   </p>
                 </div>
@@ -144,12 +143,12 @@ export default function EditPage({ }: PageProps) {
             onSubmit={handleSubmit}
           />
 
-          <div className="flex justify-between items-center">
-            <p className="text-gray-600">
+          <div className="space-y-3 xs:space-y-0 xs:flex xs:justify-between xs:items-center">
+            <p className="text-gray-600 text-xs xs:text-sm order-2 xs:order-1">
               Нажмите Ctrl+Enter для быстрого сохранения
             </p>
 
-            <div className="flex justify-between items-center gap-4">
+            <div className="flex flex-col xs:flex-row xs:items-center gap-3 xs:gap-4 order-1 xs:order-2">
               {/* Показываем поле кода только если пользователь не владелец записи */}
               {!isOwner && (
                 <input
@@ -158,7 +157,7 @@ export default function EditPage({ }: PageProps) {
                   value={code}
                   onChange={(e) => setCode(e.target.value)}
                   placeholder="Введите код для редактирования"
-                  className="w-72 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full xs:w-72 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm xs:text-base touch-target"
                 />
               )}
 
@@ -168,7 +167,7 @@ export default function EditPage({ }: PageProps) {
                   isSubmitting ||
                   (!isOwner && !code)
                 }
-                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full xs:w-auto px-4 xs:px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed text-sm xs:text-base touch-target font-medium"
               >
                 {isSubmitting ? 'Сохранение...' : 'Сохранить изменения'}
               </button>
