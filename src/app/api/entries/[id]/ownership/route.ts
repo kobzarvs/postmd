@@ -9,7 +9,14 @@ export async function GET(
     { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const session = (await getServerSession(authOptions)) as Session | null
+        // Don't fail hard if auth is misconfigured; treat as anonymous
+        let session: Session | null = null
+        try {
+            session = (await getServerSession(authOptions)) as Session | null
+        } catch (e) {
+            console.warn('getServerSession (ownership) failed, proceeding anonymous:', (e as Error)?.message)
+            session = null
+        }
         const { id } = await params
 
         const entry = await prisma.entry.findUnique({
@@ -26,10 +33,9 @@ export async function GET(
 
         const isOwner = Boolean(session?.user?.id && entry.userId && session.user.id === entry.userId)
         return NextResponse.json({ isOwner })
-    } catch {
-        return NextResponse.json(
-            { error: 'Ошибка при определении владения' },
-            { status: 500 }
-        )
+    } catch (e) {
+        console.error('Ownership check failed:', (e as Error)?.message)
+        // Be conservative and return not owner instead of 500 to avoid breaking UI
+        return NextResponse.json({ isOwner: false })
     }
 }
