@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import dynamic from 'next/dynamic'
 import 'katex/dist/katex.min.css'
 import { renderMarkdown } from '@/lib/markdown'
@@ -77,14 +77,16 @@ export default function MarkdownEditor({
         </button>
       </div>
       {tab === 'edit' ? (
-        <MDEditor
-          value={value}
-          onChange={(val?: string) => onChange(val || '')}
-          preview="edit"
-          // @ts-expect-error -- MDEditor height expects a number, but we use a responsive CSS string (vh)
-          height="calc(100vh - 340px)"
-          textareaProps={{ placeholder, style: { fontSize: 18 } }}
-        />
+        <EditorFocusWrapper>
+          <MDEditor
+            value={value}
+            onChange={(val?: string) => onChange(val || '')}
+            preview="edit"
+            // @ts-expect-error -- MDEditor height expects a number, but we use a responsive CSS string (vh)
+            height="calc(100vh - 340px)"
+            textareaProps={{ placeholder, style: { fontSize: 18 } }}
+          />
+        </EditorFocusWrapper>
       ) : (
         <div className="border border-gray-300 rounded-lg p-4 min-h-[500px] bg-white overflow-auto">
           <MermaidHydrator />
@@ -92,6 +94,34 @@ export default function MarkdownEditor({
           <div className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: previewHtml }} />
         </div>
       )}
+    </div>
+  )
+}
+
+// Wraps the editor and ensures any click focuses the underlying textarea
+function EditorFocusWrapper({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement | null>(null)
+
+  const handleMouseDownCapture: React.MouseEventHandler<HTMLDivElement> = (e) => {
+    const target = e.target as HTMLElement
+    // Don't steal focus from buttons/links inside the editor (e.g., toolbar)
+    if (target.closest('button, a, [role="button"]')) return
+    const root = ref.current
+    if (!root) return
+    const textarea = (root.querySelector('textarea, .w-md-editor-text-input textarea, .w-md-editor-textarea') as HTMLTextAreaElement | null)
+    if (textarea) {
+      // Stop default selection behavior that may blur the textarea when clicking empty space
+      e.preventDefault()
+      // Focus and move caret to end to avoid lost focus when clicking empty area
+      textarea.focus()
+      const len = textarea.value?.length ?? 0
+      try { textarea.setSelectionRange(len, len) } catch { /* noop */ }
+    }
+  }
+
+  return (
+    <div ref={ref} onMouseDownCapture={handleMouseDownCapture} className="cursor-text">
+      {children}
     </div>
   )
 }
