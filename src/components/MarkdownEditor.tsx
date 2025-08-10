@@ -54,12 +54,12 @@ export default function MarkdownEditor({
 
   if (!mounted) {
     return (
-      <div className="min-h-[400px] xs:min-h-[500px] border border-gray-300 rounded-lg p-3 xs:p-4">
+      <div className="min-h-[400px] xs:min-h-[500px] border border-gray-300 dark:border-gray-600 rounded-lg p-3 xs:p-4">
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full h-full min-h-[400px] xs:min-h-[500px] outline-none resize-none text-sm xs:text-base"
+          className="w-full h-full min-h-[400px] xs:min-h-[500px] outline-none resize-none text-sm xs:text-base bg-transparent"
         />
       </div>
     )
@@ -81,13 +81,13 @@ export default function MarkdownEditor({
   }
 
   return (
-    <div className="w-full" data-color-mode="light">
+    <div className="w-full" data-color-mode="auto">
       <div className="mb-2 flex gap-1 xs:gap-2">
         <button 
           type="button" 
           onClick={() => setTab('edit')} 
           className={`px-2 xs:px-3 py-1 rounded text-xs xs:text-sm touch-target ${
-            tab === 'edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+            tab === 'edit' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200'
           }`}
         >
           Редактирование
@@ -96,7 +96,7 @@ export default function MarkdownEditor({
           type="button" 
           onClick={() => setTab('preview')} 
           className={`px-2 xs:px-3 py-1 rounded text-xs xs:text-sm touch-target ${
-            tab === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+            tab === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200'
           }`}
         >
           Предварительный просмотр
@@ -120,10 +120,10 @@ export default function MarkdownEditor({
           />
         </EditorFocusWrapper>
       ) : (
-        <div className="border border-gray-300 rounded-lg p-3 xs:p-4 min-h-[400px] xs:min-h-[500px] bg-white overflow-auto">
+        <div className="border border-gray-300 dark:border-gray-600 rounded-lg p-3 xs:p-4 min-h-[400px] xs:min-h-[500px] bg-white dark:bg-gray-800 overflow-auto">
           <MermaidHydrator />
           <PlantUmlHydrator />
-          <div className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+          <div className="prose prose-gray max-w-none dark:text-gray-200" dangerouslySetInnerHTML={{ __html: previewHtml }} />
         </div>
       )}
     </div>
