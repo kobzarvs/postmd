@@ -39,26 +39,26 @@ export default function PostCreatedModal({ isOpen, onClose, postId, editCode }: 
   )
 
   return (
-    <div className="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <div className="flex items-center">
+    <div className="fixed inset-0 bg-gray-500/50 flex items-center justify-center z-50 p-3 xs:p-4">
+      <div className="bg-white rounded-lg shadow-xl w-full max-w-sm xs:max-w-md">
+        <div className="p-4 xs:p-6">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex items-start">
               <div className="flex-shrink-0">
-                <svg className="h-8 w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="h-6 w-6 xs:h-8 xs:w-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div className="ml-3">
-                <h3 className="font-semibold text-gray-900">Пост успешно создан!</h3>
+              <div className="ml-3 flex-1 min-w-0">
+                <h3 className="font-semibold text-gray-900 text-sm xs:text-base">Пост успешно создан!</h3>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 hover:text-gray-600 transition-colors touch-target flex-shrink-0 ml-2"
               aria-label="Закрыть"
             >
-              <svg className="h-6 w-6 cursor-pointer" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-5 w-5 xs:h-6 xs:w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
@@ -67,7 +67,7 @@ export default function PostCreatedModal({ isOpen, onClose, postId, editCode }: 
           <div className="space-y-4">
             {/* URL поста */}
             <div>
-              <label className="block font-medium text-gray-700 mb-2">
+              <label className="block font-medium text-gray-700 mb-2 text-sm">
                 Ссылка на пост:
               </label>
               <div className="flex items-center space-x-2">
@@ -75,11 +75,11 @@ export default function PostCreatedModal({ isOpen, onClose, postId, editCode }: 
                   type="text"
                   value={postUrl}
                   readOnly
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-50"
+                  className="flex-1 px-2 xs:px-3 py-2 border border-gray-300 rounded-md bg-gray-50 text-xs xs:text-sm min-w-0"
                 />
                 <button
                   onClick={() => copyToClipboard(postUrl, 'url')}
-                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                  className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors touch-target flex-shrink-0"
                   title="Скопировать ссылку"
                 >
                   {copiedField === 'url' ? <CheckIcon /> : <CopyIcon />}
@@ -90,7 +90,7 @@ export default function PostCreatedModal({ isOpen, onClose, postId, editCode }: 
             {/* Код для редактирования */}
             {editCode && (
               <div>
-                <label className="block font-medium text-gray-700 mb-2">
+                <label className="block font-medium text-gray-700 mb-2 text-sm">
                   Код для редактирования:
                 </label>
                 <div className="flex items-center space-x-2">
@@ -98,17 +98,17 @@ export default function PostCreatedModal({ isOpen, onClose, postId, editCode }: 
                     type="text"
                     value={editCode}
                     readOnly
-                    className="flex-1 px-3 py-2 border border-gray-300 rounded-md bg-gray-50 font-mono"
+                    className="flex-1 px-2 xs:px-3 py-2 border border-gray-300 rounded-md bg-gray-50 font-mono text-xs xs:text-sm min-w-0"
                   />
                   <button
                     onClick={() => copyToClipboard(editCode, 'code')}
-                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors"
+                    className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors touch-target flex-shrink-0"
                     title="Скопировать код"
                   >
                     {copiedField === 'code' ? <CheckIcon /> : <CopyIcon />}
                   </button>
                 </div>
-                <p className="text-gray-500 mt-2 italic">
+                <p className="text-gray-500 mt-2 italic text-xs xs:text-sm">
                   Сохраните этот код для редактирования
                 </p>
               </div>
