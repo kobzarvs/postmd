@@ -5,7 +5,6 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:1-22-bookworm",
 	"features": {
-		"ghcr.io/devcontainers/features/git-lfs:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
 		"ghcr.io/wxw-matt/devcontainer-features/command_runner:0": {},
 		"ghcr.io/wxw-matt/devcontainer-features/script_runner:0": {}

@@ -5,9 +5,15 @@ import mila from 'markdown-it-link-attributes'
 import katex from 'markdown-it-katex'
 import hljs from 'highlight.js'
 import tables from 'markdown-it-multimd-table'
+import DOMPurify from 'isomorphic-dompurify'
+import { domPurifyConfig } from './security'
 
 // Environment-driven toggle to allow raw HTML in markdown input (default: false)
 const ALLOW_RAW_HTML = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_MD_ALLOW_HTML === 'true'
+
+// Cached MarkdownIt instance
+let cachedMarkdown: MarkdownIt | null = null
+let cachedAllowHtml: boolean | null = null
 
 // Fenced block wrappers for diagram languages
 function fencedDiagramsPlugin(md: MarkdownIt) {
@@ -29,6 +35,11 @@ function fencedDiagramsPlugin(md: MarkdownIt) {
 }
 
 export async function createMarkdown(): Promise<MarkdownIt> {
+    // Return cached instance if config hasn't changed
+    if (cachedMarkdown && cachedAllowHtml === ALLOW_RAW_HTML) {
+        return cachedMarkdown
+    }
+
     const md: MarkdownIt = new MarkdownIt({
         // Disallow raw HTML in user input by default; plugins still output safe HTML
         html: ALLOW_RAW_HTML,
@@ -76,11 +87,24 @@ export async function createMarkdown(): Promise<MarkdownIt> {
         .use(mila, { attrs: { target: '_blank', rel: 'noopener noreferrer' } })
         .use(fencedDiagramsPlugin)
 
+    // Cache the instance and current config
+    cachedMarkdown = md
+    cachedAllowHtml = ALLOW_RAW_HTML
+
     return md
 }
 
 export async function renderMarkdown(content: string) {
     const md = await createMarkdown()
     const html = md.render(content)
-    return html
+    // Always sanitize output before returning
+    try {
+        const safeHtml = DOMPurify.sanitize(html, domPurifyConfig)
+        return safeHtml
+    } catch (error) {
+        console.error('DOMPurify sanitization failed:', error)
+        // Return safely escaped HTML as a fallback
+        // Use markdown-it's escapeHtml utility to ensure no unsanitized content is returned
+        return md.utils.escapeHtml(html)
+    }
 }
