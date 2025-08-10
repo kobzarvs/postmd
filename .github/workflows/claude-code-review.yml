@@ -76,3 +76,17 @@ jobs:
           #   !contains(github.event.pull_request.title, '[skip-review]') &&
           #   !contains(github.event.pull_request.title, '[WIP]')
 
+      - name: Telegram Message Notify
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            ✅ Claude code review completed!
+            Repo: ${{ github.repository }}
+            Branch: ${{ github.ref }}
+            Commit: ${{ github.sha }}
+            Автор: ${{ github.actor }}
+            [Подробнее](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})
+          format: markdown
+

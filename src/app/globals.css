@@ -1,6 +1,8 @@
 @import "tailwindcss";
 /* Syntax highlighting theme for highlight.js */
 @import "highlight.js/styles/github-dark.css";
+/* KaTeX styles for math rendering */
+@import "katex/dist/katex.min.css";
 
 :root {
   --background: #ffffff;

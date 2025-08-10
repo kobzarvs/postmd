@@ -29,13 +29,13 @@ export default async function EntryPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-6xl mx-auto px-4 py-8">
         <header className="mb-8 flex items-center justify-between">
-          <Link 
+          <Link
             href="/"
             className="text-blue-600 hover:text-blue-800 transition-colors"
           >
-            ← Новая запись
+            Новая запись
           </Link>
           <div className="flex items-center gap-4">
             <Link
@@ -59,9 +59,7 @@ export default async function EntryPage({ params }: PageProps) {
             <ViewCounter entryId={id} initialViews={entry.views} />
           </div>
 
-          <div className="prose prose-gray max-w-none">
-            <MarkdownViewer content={entry.content} />
-          </div>
+          <MarkdownViewer content={entry.content} />
 
           {entry.updatedAt > entry.createdAt && (
             <div className="mt-8 pt-8 border-t text-gray-500">
