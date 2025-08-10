@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { prisma } from '@/lib/db'
 import MarkdownViewer from '@/components/MarkdownViewer'
 import ViewCounter from '@/components/ViewCounter'
+import AuthButton from '@/components/AuthButton'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -50,6 +51,7 @@ export default async function EntryPage({ params }: PageProps) {
             >
               Редактировать
             </Link>
+            <AuthButton />
           </div>
         </header>
 
