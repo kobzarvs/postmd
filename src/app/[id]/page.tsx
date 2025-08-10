@@ -1,9 +1,13 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
+import { getServerSession } from 'next-auth/next'
+import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import MarkdownViewer from '@/components/MarkdownViewer'
 import ViewCounter from '@/components/ViewCounter'
 import AuthButton from '@/components/AuthButton'
+import DeleteEntryButton from '@/components/DeleteEntryButton'
+import type { Session } from 'next-auth'
 
 interface PageProps {
   params: Promise<{ id: string }>
@@ -28,6 +32,10 @@ export default async function EntryPage({ params }: PageProps) {
     notFound()
   }
 
+  // Get session to check if user owns this entry
+  const session = await getServerSession(authOptions) as Session | null
+  const isOwner = session?.user?.id && entry.userId === session.user.id
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
@@ -51,6 +59,12 @@ export default async function EntryPage({ params }: PageProps) {
             >
               Редактировать
             </Link>
+            {isOwner && (
+              <DeleteEntryButton 
+                entryId={id}
+                className="text-red-600 hover:text-red-800 transition-colors"
+              />
+            )}
             <AuthButton />
           </div>
         </header>
