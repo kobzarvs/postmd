@@ -16,7 +16,7 @@ export default async function ProfilePage() {
   // Check if user ID exists in session
   if (!session.user?.id) {
     console.error('User ID not found in session:', session)
-    redirect('/auth/signin?callbackUrl=/profile&error=SessionError')
+    redirect('/auth/signin?callbackUrl=/profile&error=authentication_required')
   }
 
   const userEntries = await prisma.entry.findMany({
