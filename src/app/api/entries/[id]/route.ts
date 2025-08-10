@@ -27,6 +27,7 @@ export async function GET(
       id: entry.id,
       content: entry.content,
       views: entry.views,
+      userId: entry.userId,
       createdAt: entry.createdAt,
       updatedAt: entry.updatedAt,
     })
@@ -46,12 +47,12 @@ export async function PUT(
     const session = await getServerSession(authOptions) as Session | null
     const { id } = await params
     const body = await request.json()
-    
+
     // Для авторизованных пользователей код не обязателен
-    const schema = session?.user?.id 
+    const schema = session?.user?.id
       ? updateEntrySchema.omit({ code: true }).extend({ code: updateEntrySchema.shape.code.optional() })
       : updateEntrySchema
-    
+
     const validatedData = schema.parse(body)
 
     const entry = await prisma.entry.findUnique({

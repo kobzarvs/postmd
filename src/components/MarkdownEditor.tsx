@@ -59,7 +59,7 @@ export default function MarkdownEditor({
     <div className="w-full" data-color-mode="light">
       <MDEditor
         value={value}
-        onChange={(val) => onChange(val || '')}
+        onChange={(val?: string) => onChange(val || '')}
         preview="live"
         height={500}
         textareaProps={{

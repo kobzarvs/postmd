@@ -14,7 +14,7 @@
 
 ## Технологии
 
-- **Frontend**: Next.js 14 (App Router), TypeScript, Tailwind CSS
+- **Frontend**: Next.js 15 (App Router), TypeScript, Tailwind CSS
 - **Backend**: Next.js API Routes
 - **База данных**: PostgreSQL + Prisma ORM
 - **Markdown**: @uiw/react-md-editor, react-markdown
@@ -73,8 +73,7 @@ POST /api/entries
 {
   "content": "# Заголовок\nТекст записи",
   "customUrl": "my-post",      // опционально
-  "editCode": "secret123",      // опционально
-  "modifyCode": "modify456"     // опционально
+  "editCode": "secret123"       // опционально
 }
 ```
 
@@ -88,7 +87,7 @@ GET /api/entries/{id}
 PUT /api/entries/{id}
 {
   "content": "Обновленный текст",
-  "code": "secret123"  // editCode или modifyCode
+  "code": "secret123"  // editCode (для анонимных записей). Для владельца (OAuth) можно без кода
 }
 ```
 

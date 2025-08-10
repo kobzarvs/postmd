@@ -21,7 +21,7 @@ export default function EditPage({}: PageProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [entryData, setEntryData] = useState<{ userId?: string } | null>(null)
+  const [isOwner, setIsOwner] = useState<boolean>(false)
 
   useEffect(() => {
     // Загружаем содержимое записи
@@ -30,7 +30,6 @@ export default function EditPage({}: PageProps) {
       .then((data) => {
         if (data.content) {
           setContent(data.content)
-          setEntryData(data)
         } else {
           setError('Запись не найдена')
         }
@@ -43,10 +42,18 @@ export default function EditPage({}: PageProps) {
       })
   }, [id])
 
+  useEffect(() => {
+    // Определяем владение отдельным запросом (без раскрытия userId)
+    fetch(`/api/entries/${id}/ownership`)
+      .then((res) => res.ok ? res.json() : Promise.resolve({ isOwner: false }))
+      .then((data) => setIsOwner(Boolean(data.isOwner)))
+      .catch(() => setIsOwner(false))
+  }, [id])
+
   const handleSubmit = async () => {
-    const isOwner = session?.user?.id && entryData?.userId === session.user.id
-    
-    if (!isOwner && !code) {
+  const owner = Boolean(isOwner || (session?.user?.id && isOwner))
+
+  if (!owner && !code) {
       setError('Введите код доступа')
       return
     }
@@ -111,7 +118,7 @@ export default function EditPage({}: PageProps) {
 
         <div className="space-y-4">
           {/* Показываем поле кода только если пользователь не владелец записи */}
-          {!(session?.user?.id && entryData?.userId === session.user.id) && (
+          {!isOwner && (
             <div>
               <label htmlFor="code" className="block font-medium text-gray-700 mb-1">
                 Код доступа
@@ -128,7 +135,7 @@ export default function EditPage({}: PageProps) {
           )}
 
           {/* Показываем информацию для владельца */}
-          {session?.user?.id && entryData?.userId === session.user.id && (
+          {isOwner && (
             <div className="bg-green-50 border border-green-200 rounded-md p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
@@ -159,7 +166,7 @@ export default function EditPage({}: PageProps) {
               onClick={handleSubmit}
               disabled={
                 isSubmitting || 
-                (!(session?.user?.id && entryData?.userId === session.user.id) && !code)
+                (!isOwner && !code)
               }
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             >
