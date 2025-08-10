@@ -15,7 +15,7 @@ export default async function ProfilePage() {
 
   // Check if user ID exists in session
   if (!session.user?.id) {
-    console.error('User ID not found in session:', session)
+    console.error('User ID not found in session for user:', session.user?.email || session.user?.name)
     redirect('/auth/signin?callbackUrl=/profile&error=authentication_required')
   }
 
