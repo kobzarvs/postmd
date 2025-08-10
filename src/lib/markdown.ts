@@ -6,9 +6,16 @@ import katex from 'markdown-it-katex'
 import hljs from 'highlight.js'
 import tables from 'markdown-it-multimd-table'
 import DOMPurify from 'isomorphic-dompurify'
-import { domPurifyConfig } from './security'
+import { strictDomPurifyConfig, relaxedDomPurifyConfig } from './security'
+
+// Verify DOMPurify is properly initialized
+if (!DOMPurify || typeof DOMPurify.sanitize !== 'function') {
+    throw new Error('DOMPurify failed to initialize properly. This may be an SSR environment issue.')
+}
 
 // Environment-driven toggle to allow raw HTML in markdown input (default: false)
+// When true: markdown-it will parse raw HTML and DOMPurify applies relaxed sanitization
+// When false: markdown-it ignores raw HTML and DOMPurify applies strict sanitization
 const ALLOW_RAW_HTML = typeof process !== 'undefined' && process.env.NEXT_PUBLIC_MD_ALLOW_HTML === 'true'
 
 // Cached MarkdownIt instance
@@ -41,7 +48,9 @@ export async function createMarkdown(): Promise<MarkdownIt> {
     }
 
     const md: MarkdownIt = new MarkdownIt({
-        // Disallow raw HTML in user input by default; plugins still output safe HTML
+        // Controls whether markdown-it parses raw HTML tags in the input
+        // When false (default): Raw HTML is treated as plain text
+        // When true: Raw HTML is parsed and will be sanitized by DOMPurify with relaxed rules
         html: ALLOW_RAW_HTML,
         linkify: true,
         breaks: false,
@@ -97,9 +106,15 @@ export async function createMarkdown(): Promise<MarkdownIt> {
 export async function renderMarkdown(content: string) {
     const md = await createMarkdown()
     const html = md.render(content)
-    // Always sanitize output before returning
+    
+    // IMPORTANT: Sanitization ALWAYS occurs to prevent XSS attacks
+    // The strictness of sanitization depends on the ALLOW_RAW_HTML flag:
+    // - When ALLOW_RAW_HTML=false (default): Use strict config that only allows markdown-generated HTML
+    // - When ALLOW_RAW_HTML=true: Use relaxed config that allows more HTML tags but still prevents XSS
+    const sanitizationConfig = ALLOW_RAW_HTML ? relaxedDomPurifyConfig : strictDomPurifyConfig
+    
     try {
-        const safeHtml = DOMPurify.sanitize(html, domPurifyConfig)
+        const safeHtml = DOMPurify.sanitize(html, sanitizationConfig)
         return safeHtml
     } catch (error) {
         console.error('DOMPurify sanitization failed:', error)
