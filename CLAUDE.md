@@ -80,8 +80,6 @@ PostMD is a Next.js 15 Markdown paste service (rentry.co clone) with optional OA
 
 ### OAuth Variables (Optional)
 - `GITHUB_ID` / `GITHUB_SECRET`
-- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`  
-- `TWITTER_CLIENT_ID` / `TWITTER_CLIENT_SECRET`
 
 See `OAUTH_SETUP.md` for detailed OAuth provider configuration.
 

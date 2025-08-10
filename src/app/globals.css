@@ -24,3 +24,160 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Minimal typography for markdown content */
+.prose {
+  line-height: 1.4;
+  font-size: 22px;
+  /* base text size for preview and posts */
+}
+
+.prose h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin: 1.2em 0 0.6em;
+}
+
+.prose h2 {
+  font-size: 1.5em;
+  font-weight: 700;
+  margin: 1.1em 0 0.55em;
+}
+
+.prose h3 {
+  font-size: 1.25em;
+  font-weight: 700;
+  margin: 1em 0 0.5em;
+}
+
+.prose p {
+  margin: 0.8em 0;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+  margin: 0.8em 0;
+}
+
+.prose li {
+  margin: 0.3em 0;
+}
+
+.prose a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.prose code {
+  background: #f3f4f6;
+  padding: 0.2em 0.35em;
+  border-radius: 4px;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
+  font-size: 0.95em;
+}
+
+.prose pre {
+  background: #0b1020;
+  color: #e5e7eb;
+  padding: 0.8rem;
+  border-radius: 6px;
+  overflow: auto;
+}
+
+.prose pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.prose blockquote {
+  border-left: 4px solid #e5e7eb;
+  padding-left: 1rem;
+  color: #6b7280;
+  margin: 1rem 0;
+}
+
+.prose table {
+  border-collapse: collapse;
+  width: auto;
+  /* size to content */
+  max-width: 100%;
+  /* prevent overflow */
+  display: inline-table;
+  /* shrink-to-fit and allow centering */
+  margin: 1rem auto;
+  /* center horizontally */
+  font-size: 18px;
+  /* slightly smaller text in tables */
+}
+
+.prose th,
+.prose td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.6rem;
+}
+
+.prose thead th {
+  background: #f9fafb;
+}
+
+.prose img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Mermaid diagram container */
+.prose .mermaid {
+  background: transparent;
+  padding: 0.75rem;
+  border-radius: 8px;
+  overflow: auto;
+  margin: 1rem 0;
+  text-align: center;
+  /* center inline SVG */
+}
+
+.prose .mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+  /* allow text-align center to work */
+}
+
+/* PlantUML diagram container */
+.prose .plantuml {
+  background: transparent;
+  padding: 0.75rem;
+  border-radius: 8px;
+  overflow: auto;
+  margin: 1rem 0;
+  text-align: center;
+}
+
+.prose .plantuml svg {
+  max-width: 100%;
+  height: auto;
+  display: inline-block;
+}
+
+.dark .prose pre {
+  background: #0b1020;
+}
+
+.dark .prose code {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+.dark .prose blockquote {
+  border-left-color: #374151;
+  color: #9ca3af;
+}
+
+.dark .prose thead th {
+  background: #111827;
+}
+
+.dark .prose .mermaid {
+  background: transparent;
+}

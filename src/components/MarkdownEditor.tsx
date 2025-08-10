@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import dynamic from 'next/dynamic'
-import remarkGfm from 'remark-gfm'
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter'
-import { oneDark } from 'react-syntax-highlighter/dist/esm/styles/prism'
+import 'katex/dist/katex.min.css'
+import { renderMarkdown } from '@/lib/markdown'
+import MermaidHydrator from './MermaidHydrator'
+import PlantUmlHydrator from './PlantUmlHydrator'
 
 const MDEditor = dynamic(
   () => import('@uiw/react-md-editor').then((mod) => mod.default),
@@ -25,6 +26,8 @@ export default function MarkdownEditor({
   onSubmit,
 }: MarkdownEditorProps) {
   const [mounted, setMounted] = useState(false)
+  const [tab, setTab] = useState<'edit' | 'preview'>('edit')
+  const [previewHtml, setPreviewHtml] = useState<string>('')
 
   useEffect(() => {
     setMounted(true)
@@ -42,6 +45,13 @@ export default function MarkdownEditor({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [onSubmit])
 
+  useEffect(() => {
+    if (tab === 'preview') {
+      // render markdown to html using same pipeline
+      renderMarkdown(value).then(setPreviewHtml).catch(() => setPreviewHtml(''))
+    }
+  }, [tab, value])
+
   if (!mounted) {
     return (
       <div className="min-h-[500px] border border-gray-300 rounded-lg p-4">
@@ -57,39 +67,25 @@ export default function MarkdownEditor({
 
   return (
     <div className="w-full" data-color-mode="light">
-      <MDEditor
-        value={value}
-        onChange={(val?: string) => onChange(val || '')}
-        preview="live"
-        height={500}
-        textareaProps={{
-          placeholder,
-        }}
-        previewOptions={{
-          components: {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            code({ inline, className, children, ...props }: any) {
-              const match = /language-(\w+)/.exec(className || '')
-              return !inline && match ? (
-                <SyntaxHighlighter
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  style={oneDark as any}
-                  language={match[1]}
-                  PreTag="div"
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              ) : (
-                <code className={className} {...props}>
-                  {children}
-                </code>
-              )
-            },
-          },
-          remarkPlugins: [remarkGfm],
-        }}
-      />
+      <div className="mb-2 flex gap-2">
+        <button type="button" onClick={() => setTab('edit')} className={`px-3 py-1 rounded ${tab==='edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Edit</button>
+        <button type="button" onClick={() => setTab('preview')} className={`px-3 py-1 rounded ${tab==='preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Preview</button>
+      </div>
+      {tab === 'edit' ? (
+        <MDEditor
+          value={value}
+          onChange={(val?: string) => onChange(val || '')}
+          preview="edit"
+          height={500}
+          textareaProps={{ placeholder }}
+        />
+      ) : (
+        <div className="border border-gray-300 rounded-lg p-4 min-h-[500px] bg-white overflow-auto">
+          <MermaidHydrator />
+          <PlantUmlHydrator />
+          <div className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: previewHtml }} />
+        </div>
+      )}
     </div>
   )
 }

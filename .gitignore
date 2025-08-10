@@ -45,3 +45,10 @@ prisma/migrations/
 .idea
 .env*.local
 .claude
+CLAUDE.md
+GEMINI.md
+.claude
+.hive-mind
+.roo
+.swarm
+/memory
