@@ -4,6 +4,7 @@ import { getProviders, signIn, getSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import { GithubMarkIcon } from '@/components/icons/GithubMarkIcon'
 
 interface Provider {
   id: string
@@ -39,7 +40,7 @@ export default function SignInClient() {
   const getProviderIcon = (providerId: string) => {
     switch (providerId) {
       case 'github':
-        return '🐙'
+        return <GithubMarkIcon className="w-5 h-5" />
       case 'google':
         return '🔍'
       case 'twitter':
@@ -92,7 +93,7 @@ export default function SignInClient() {
                   provider.id
                 )}`}
               >
-                <span className="mr-3">
+                <span className="mr-3 flex items-center">
                   {getProviderIcon(provider.id)}
                 </span>
                 Войти через {provider.name}
