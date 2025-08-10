@@ -30,7 +30,7 @@ export default async function EntryPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="mb-8 flex items-center justify-between">
+        <header className="px-8 mb-2 flex items-center justify-between">
           <Link
             href="/"
             className="text-blue-600 hover:text-blue-800 transition-colors"
@@ -62,7 +62,7 @@ export default async function EntryPage({ params }: PageProps) {
           <MarkdownViewer content={entry.content} />
 
           {entry.updatedAt > entry.createdAt && (
-            <div className="mt-8 pt-8 border-t text-gray-500">
+            <div className="mt-8 pt-8 border-t border-gray-300 text-gray-600">
               Обновлено: {new Date(entry.updatedAt).toLocaleString('ru-RU')}
             </div>
           )}

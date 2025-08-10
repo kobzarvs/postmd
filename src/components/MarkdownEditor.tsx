@@ -60,6 +60,7 @@ export default function MarkdownEditor({
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           className="w-full h-full min-h-[500px] outline-none resize-none"
+          style={{ fontSize: 24 }}
         />
       </div>
     )
@@ -68,16 +69,21 @@ export default function MarkdownEditor({
   return (
     <div className="w-full" data-color-mode="light">
       <div className="mb-2 flex gap-2">
-        <button type="button" onClick={() => setTab('edit')} className={`px-3 py-1 rounded ${tab==='edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Edit</button>
-        <button type="button" onClick={() => setTab('preview')} className={`px-3 py-1 rounded ${tab==='preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>Preview</button>
+        <button type="button" onClick={() => setTab('edit')} className={`px-3 py-1 rounded ${tab === 'edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+          Редактирование
+        </button>
+        <button type="button" onClick={() => setTab('preview')} className={`px-3 py-1 rounded ${tab === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+          Предварительный просмотр
+        </button>
       </div>
       {tab === 'edit' ? (
         <MDEditor
           value={value}
           onChange={(val?: string) => onChange(val || '')}
           preview="edit"
-          height={500}
-          textareaProps={{ placeholder }}
+          // @ts-expect-error
+          height="calc(100vh - 340px)"
+          textareaProps={{ placeholder, style: { fontSize: 18 } }}
         />
       ) : (
         <div className="border border-gray-300 rounded-lg p-4 min-h-[500px] bg-white overflow-auto">

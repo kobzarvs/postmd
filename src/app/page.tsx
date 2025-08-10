@@ -1,13 +1,14 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import EntryForm from '@/components/EntryForm'
 import AuthButton from '@/components/AuthButton'
 import PostCreatedModal from '@/components/PostCreatedModal'
-import MarkdownViewer from '@/components/MarkdownViewer'
 import { type CreateEntryInput } from '@/lib/validation'
 
 export default function HomePage() {
+  const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
@@ -32,13 +33,8 @@ export default function HomePage() {
       }
 
       const result = await response.json()
-
-      // Показываем модальное окно вместо перенаправления
-      setCreatedPost({
-        id: result.id,
-        editCode: result.editCode,
-        content: data.content
-      })
+      // Показываем модалку с ссылкой и кодом, редирект выполним после закрытия
+      setCreatedPost({ id: result.id, editCode: result.editCode, content: data.content })
       setShowModal(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла неизвестная ошибка')
@@ -66,20 +62,15 @@ export default function HomePage() {
           </div>
         )}
 
-        {createdPost && showModal ? (
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <MarkdownViewer content={createdPost.content} />
-          </div>
-        ) : (
-          <EntryForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
-        )}
+        <EntryForm onSubmit={handleSubmit} isSubmitting={isSubmitting} />
 
         {createdPost && (
           <PostCreatedModal
             isOpen={showModal}
             onClose={() => {
               setShowModal(false)
-              setCreatedPost(null)
+              // Редирект на опубликованный пост после закрытия модалки
+              router.push(`/${createdPost.id}`)
             }}
             postId={createdPost.id}
             editCode={createdPost.editCode}
