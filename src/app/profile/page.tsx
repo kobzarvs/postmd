@@ -13,9 +13,15 @@ export default async function ProfilePage() {
     redirect('/auth/signin?callbackUrl=/profile')
   }
 
+  // Check if user ID exists in session
+  if (!session.user?.id) {
+    console.error('User ID not found in session for user:', session.user?.email || session.user?.name)
+    redirect('/auth/signin?callbackUrl=/profile&error=authentication_required')
+  }
+
   const userEntries = await prisma.entry.findMany({
     where: {
-      userId: session!.user.id,
+      userId: session.user.id,
     },
     orderBy: {
       createdAt: 'desc',
@@ -24,7 +30,7 @@ export default async function ProfilePage() {
 
   const stats = await prisma.entry.aggregate({
     where: {
-      userId: session!.user.id,
+      userId: session.user.id,
     },
     _count: { id: true },
     _sum: { views: true },
