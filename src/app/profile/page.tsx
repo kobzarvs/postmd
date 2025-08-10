@@ -7,7 +7,38 @@ import DeleteEntryButton from '@/components/DeleteEntryButton'
 import type { Session } from 'next-auth'
 
 export default async function ProfilePage() {
-  const session = await getServerSession(authOptions) as Session | null
+  let session: Session | null = null
+  let authError = false
+
+  try {
+    session = await getServerSession(authOptions) as Session | null
+  } catch (error) {
+    console.error('Authentication error:', error)
+    authError = true
+  }
+
+  if (authError) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+            <h1 className="text-xl font-semibold text-red-800 mb-2">
+              Ошибка аутентификации
+            </h1>
+            <p className="text-red-700 mb-4">
+              В настоящее время система аутентификации недоступна. Попробуйте позже.
+            </p>
+            <Link
+              href="/"
+              className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              На главную
+            </Link>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   if (!session) {
     redirect('/auth/signin?callbackUrl=/profile')
@@ -19,22 +50,34 @@ export default async function ProfilePage() {
     redirect('/auth/signin?callbackUrl=/profile&error=authentication_required')
   }
 
-  const userEntries = await prisma.entry.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  })
+  let userEntries
+  let stats
+  let dbError = false
 
-  const stats = await prisma.entry.aggregate({
-    where: {
-      userId: session.user.id,
-    },
-    _count: { id: true },
-    _sum: { views: true },
-  })
+  try {
+    userEntries = await prisma.entry.findMany({
+      where: {
+        userId: session.user.id,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    })
+
+    stats = await prisma.entry.aggregate({
+      where: {
+        userId: session.user.id,
+      },
+      _count: { id: true },
+      _sum: { views: true },
+    })
+  } catch (error) {
+    console.error('Database error in profile page:', error)
+    dbError = true
+    // Return empty results in case of database error
+    userEntries = []
+    stats = { _count: { id: 0 }, _sum: { views: 0 } }
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -53,6 +96,23 @@ export default async function ProfilePage() {
             Создать новую запись
           </Link>
         </div>
+
+        {dbError && (
+          <div className="mb-6 bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="flex">
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-yellow-800">
+                  База данных недоступна
+                </h3>
+                <div className="mt-2 text-sm text-yellow-700">
+                  <p>
+                    В настоящее время база данных недоступна. Некоторые функции могут быть ограничены.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="bg-white p-6 rounded-lg shadow">
@@ -82,13 +142,8 @@ export default async function ProfilePage() {
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {userEntries.map((entry: {
-                id: string
-                content: string
-                views: number
-                createdAt: Date
-                updatedAt: Date
-              }) => (
+              {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+              {userEntries.map((entry: any) => (
                 <div key={entry.id} className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -125,7 +180,6 @@ export default async function ProfilePage() {
                       </Link>
                       <DeleteEntryButton 
                         entryId={entry.id}
-                        onSuccess={() => window.location.reload()}
                       />
                     </div>
                   </div>
