@@ -81,7 +81,7 @@ export default function MarkdownEditor({
           value={value}
           onChange={(val?: string) => onChange(val || '')}
           preview="edit"
-          // @ts-expect-error
+          // @ts-expect-error -- MDEditor height expects a number, but we use a responsive CSS string (vh)
           height="calc(100vh - 340px)"
           textareaProps={{ placeholder, style: { fontSize: 18 } }}
         />
