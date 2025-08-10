@@ -306,26 +306,44 @@ body {
 }
 
 /* Dark mode adaptations */
-.dark .prose code {
-  background: #111827;
-  color: #e5e7eb;
-}
-
-.dark .prose pre code {
-  background: transparent;
-  color: inherit;
-}
-
-.dark .prose blockquote {
-  border-left-color: #374151;
-  color: #9ca3af;
-}
-
-.dark .prose thead th {
-  background: #111827;
-}
-
-.dark .prose .mermaid,
-.dark .prose .plantuml {
-  background: transparent;
+@media (prefers-color-scheme: dark) {
+  .prose a {
+    color: #60a5fa;
+  }
+  
+  .prose code {
+    background: #374151;
+    color: #e5e7eb;
+  }
+  
+  .prose pre {
+    background: #1f2937;
+    border-color: #374151;
+    color: #e5e7eb;
+  }
+  
+  .prose pre code {
+    background: transparent;
+    color: inherit;
+  }
+  
+  .prose blockquote {
+    border-left-color: #4b5563;
+    color: #9ca3af;
+  }
+  
+  .prose th,
+  .prose td {
+    border-color: #4b5563;
+  }
+  
+  .prose thead th {
+    background: #374151;
+    color: #e5e7eb;
+  }
+  
+  .prose .mermaid,
+  .prose .plantuml {
+    background: transparent;
+  }
 }

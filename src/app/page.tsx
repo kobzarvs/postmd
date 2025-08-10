@@ -44,13 +44,13 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="max-w-6xl mx-auto px-3 xs:px-4 py-4 xs:py-6 md:py-8">
         <header className="mb-6 md:mb-8">
           <div className="flex flex-col xs:flex-row xs:items-start xs:justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl xs:text-3xl font-bold text-gray-900 break-words">PostMD</h1>
-              <p className="text-gray-600 mt-1 xs:mt-2 text-sm xs:text-base leading-tight">
+              <h1 className="text-2xl xs:text-3xl font-bold text-gray-900 dark:text-gray-100 break-words">PostMD</h1>
+              <p className="text-gray-600 dark:text-gray-300 mt-1 xs:mt-2 text-sm xs:text-base leading-tight">
                 Простой сервис для публикации постов в формате Markdown
               </p>
             </div>
@@ -61,8 +61,8 @@ export default function HomePage() {
         </header>
 
         {error && (
-          <div className="mb-4 p-3 xs:p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 text-sm xs:text-base">{error}</p>
+          <div className="mb-4 p-3 xs:p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+            <p className="text-red-600 dark:text-red-400 text-sm xs:text-base">{error}</p>
           </div>
         )}
 
