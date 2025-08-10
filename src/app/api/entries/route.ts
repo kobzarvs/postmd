@@ -8,7 +8,14 @@ import type { Session } from 'next-auth'
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions) as Session | null
+    // Auth can be misconfigured in production; don't block posting if session retrieval fails
+    let session: Session | null = null
+    try {
+      session = (await getServerSession(authOptions)) as Session | null
+    } catch (e) {
+      console.warn('getServerSession failed, proceeding as anonymous:', (e as Error)?.message)
+      session = null
+    }
     const body = await request.json()
     const validatedData = createEntrySchema.parse(body)
 
