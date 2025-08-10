@@ -108,16 +108,10 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const session = await getServerSession(authOptions) as Session | null
     const { id } = await params
     const { searchParams } = new URL(request.url)
     const code = searchParams.get('code')
-
-    if (!code) {
-      return NextResponse.json(
-        { error: 'Код доступа обязателен' },
-        { status: 400 }
-      )
-    }
 
     const entry = await prisma.entry.findUnique({
       where: { id },
@@ -130,10 +124,16 @@ export async function DELETE(
       )
     }
 
-    if (code !== entry.editCode) {
+    // Проверяем права доступа
+    const isOwner = session?.user?.id && entry.userId === session.user.id
+    const isCodeValid = code && code === entry.editCode
+
+    if (!isOwner && !isCodeValid) {
       return NextResponse.json(
-        { error: 'Неверный код доступа' },
-        { status: 403 }
+        { error: isOwner === false && !code 
+          ? 'Код доступа обязателен' 
+          : 'Нет прав для удаления этой записи' },
+        { status: isOwner === false && !code ? 400 : 403 }
       )
     }
 

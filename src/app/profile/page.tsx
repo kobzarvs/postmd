@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth/next'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/db'
 import Link from 'next/link'
+import DeleteEntryButton from '@/components/DeleteEntryButton'
 import type { Session } from 'next-auth'
 
 export default async function ProfilePage() {
@@ -75,7 +76,13 @@ export default async function ProfilePage() {
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {userEntries.map((entry) => (
+              {userEntries.map((entry: {
+                id: string
+                content: string
+                views: number
+                createdAt: Date
+                updatedAt: Date
+              }) => (
                 <div key={entry.id} className="p-6">
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
@@ -110,6 +117,10 @@ export default async function ProfilePage() {
                       >
                         Редактировать
                       </Link>
+                      <DeleteEntryButton 
+                        entryId={entry.id}
+                        onSuccess={() => window.location.reload()}
+                      />
                     </div>
                   </div>
                 </div>
