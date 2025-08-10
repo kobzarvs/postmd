@@ -1,12 +1,9 @@
 import NextAuth from 'next-auth'
 import { authOptions } from '@/lib/auth'
 
-console.log('ns', process.env.NEXTAUTH_SECRET);
-console.log('nu', process.env.NEXTAUTH_URL);
-
 // Проверяем критически важные переменные окружения
-if (!process.env.NEXTAUTH_SECRET) {
-  console.error('NEXTAUTH_SECRET is not set. Authentication will not work.')
+if (!process.env.NEXTAUTH_SECRET && process.env.NODE_ENV === 'production') {
+  console.error('NEXTAUTH_SECRET is not set. Authentication will not work in production.')
 }
 
 if (!process.env.NEXTAUTH_URL) {

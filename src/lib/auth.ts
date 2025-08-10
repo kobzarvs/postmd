@@ -49,6 +49,8 @@ export const authOptions: any = {
   session: {
     strategy: 'jwt',
   },
+  // Allow deriving host from request headers when NEXTAUTH_URL is not set (useful in dev/local)
+  trustHost: true,
   callbacks: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     jwt: async ({ token, user }: { token: any; user: any }) => {
@@ -68,5 +70,7 @@ export const authOptions: any = {
   pages: {
     signIn: '/auth/signin',
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  // Use explicit secret if provided; in development, fall back to a constant insecure secret
+  // to avoid configuration crashes. In production, NEXTAUTH_SECRET must be set.
+  secret: process.env.NEXTAUTH_SECRET ?? (process.env.NODE_ENV !== 'production' ? 'insecure-dev-secret-change-me' : undefined),
 }
