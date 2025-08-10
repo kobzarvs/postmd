@@ -39,9 +39,9 @@ export async function createMarkdown(): Promise<MarkdownIt> {
             // Normalize common aliases
             const aliasMap: Record<string, string> = {
                 ts: 'typescript',
-                tsx: 'tsx',
+                tsx: 'typescript',
                 js: 'javascript',
-                jsx: 'jsx',
+                jsx: 'javascript',
                 sh: 'bash',
                 shell: 'bash',
                 yml: 'yaml',
@@ -55,7 +55,19 @@ export async function createMarkdown(): Promise<MarkdownIt> {
                 const { value } = hljs.highlight(str, { language })
                 return `<pre class="hljs"><code class="language-${language}">${value}</code></pre>`
             }
-            return `<pre class="hljs"><code>${md.utils.escapeHtml(str)}</code></pre>`
+            // Attempt auto-detection for unknown/missing languages
+            try {
+                const autod = hljs.highlightAuto(str, [
+                    'typescript', 'javascript', 'json', 'bash', 'yaml',
+                    'markdown', 'xml', 'html', 'css', 'python', 'go', 'rust'
+                ])
+                if (autod.language) {
+                    return `<pre class=\"hljs\"><code class=\"language-${autod.language}\">${autod.value}</code></pre>`
+                }
+            } catch {
+                // ignore and fall back to escaped
+            }
+            return `<pre class=\"hljs\"><code>${md.utils.escapeHtml(str)}</code></pre>`
         }
     })
         // Advanced tables with alignment and multiline cells
