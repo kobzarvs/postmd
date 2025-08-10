@@ -26,5 +26,5 @@ export default function ViewCounter({ entryId, initialViews }: ViewCounterProps)
       })
   }, [entryId])
 
-  return <span>Просмотров: {views}</span>
+  return <span className="text-gray-500 dark:text-gray-400 text-xs xs:text-sm">Просмотров: {views}</span>
 }
