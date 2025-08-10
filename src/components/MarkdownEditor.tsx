@@ -54,25 +54,51 @@ export default function MarkdownEditor({
 
   if (!mounted) {
     return (
-      <div className="min-h-[500px] border border-gray-300 rounded-lg p-4">
+      <div className="min-h-[400px] xs:min-h-[500px] border border-gray-300 rounded-lg p-3 xs:p-4">
         <textarea
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full h-full min-h-[500px] outline-none resize-none"
-          style={{ fontSize: 24 }}
+          className="w-full h-full min-h-[400px] xs:min-h-[500px] outline-none resize-none text-sm xs:text-base"
         />
       </div>
     )
   }
 
+  // Calculate responsive height for mobile-first approach
+  const getEditorHeight = () => {
+    if (typeof window !== 'undefined') {
+      const vh = window.innerHeight
+      if (vh <= 667) { // iPhone SE/6/7/8 and similar
+        return 'calc(100vh - 280px)'
+      } else if (vh <= 800) { // Most phones in landscape or small tablets
+        return 'calc(100vh - 320px)'
+      } else { // Tablets and desktop
+        return 'calc(100vh - 340px)'
+      }
+    }
+    return '400px' // Fallback
+  }
+
   return (
     <div className="w-full" data-color-mode="light">
-      <div className="mb-2 flex gap-2">
-        <button type="button" onClick={() => setTab('edit')} className={`px-3 py-1 rounded ${tab === 'edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+      <div className="mb-2 flex gap-1 xs:gap-2">
+        <button 
+          type="button" 
+          onClick={() => setTab('edit')} 
+          className={`px-2 xs:px-3 py-1 rounded text-xs xs:text-sm touch-target ${
+            tab === 'edit' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+          }`}
+        >
           Редактирование
         </button>
-        <button type="button" onClick={() => setTab('preview')} className={`px-3 py-1 rounded ${tab === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>
+        <button 
+          type="button" 
+          onClick={() => setTab('preview')} 
+          className={`px-2 xs:px-3 py-1 rounded text-xs xs:text-sm touch-target ${
+            tab === 'preview' ? 'bg-blue-600 text-white' : 'bg-gray-200'
+          }`}
+        >
           Предварительный просмотр
         </button>
       </div>
@@ -83,12 +109,18 @@ export default function MarkdownEditor({
             onChange={(val?: string) => onChange(val || '')}
             preview="edit"
             // @ts-expect-error -- MDEditor height expects a number, but we use a responsive CSS string (vh)
-            height="calc(100vh - 340px)"
-            textareaProps={{ placeholder, style: { fontSize: 18 } }}
+            height={getEditorHeight()}
+            textareaProps={{ 
+              placeholder, 
+              style: { 
+                fontSize: window.innerWidth <= 480 ? 16 : 18,
+                lineHeight: 1.5
+              } 
+            }}
           />
         </EditorFocusWrapper>
       ) : (
-        <div className="border border-gray-300 rounded-lg p-4 min-h-[500px] bg-white overflow-auto">
+        <div className="border border-gray-300 rounded-lg p-3 xs:p-4 min-h-[400px] xs:min-h-[500px] bg-white overflow-auto">
           <MermaidHydrator />
           <PlantUmlHydrator />
           <div className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: previewHtml }} />

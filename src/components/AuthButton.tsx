@@ -22,21 +22,21 @@ export default function AuthButton() {
       <div className="relative">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors"
+          className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 transition-colors touch-target"
         >
           {session.user?.image && (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={session.user.image}
               alt={session.user.name || 'User'}
-              className="w-8 h-8 rounded-full"
+              className="w-7 h-7 xs:w-8 xs:h-8 rounded-full flex-shrink-0"
             />
           )}
-          <span className="font-medium">
+          <span className="font-medium text-sm xs:text-base truncate max-w-[120px] xs:max-w-none">
             {session.user?.name || session.user?.email}
           </span>
           <svg
-            className={`w-4 h-4 transition-transform ${
+            className={`w-4 h-4 transition-transform flex-shrink-0 ${
               showDropdown ? 'rotate-180' : ''
             }`}
             fill="none"
@@ -48,10 +48,10 @@ export default function AuthButton() {
         </button>
 
         {showDropdown && (
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-200">
+          <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
             <Link
               href="/profile"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors text-sm touch-target"
               onClick={() => setShowDropdown(false)}
             >
               Мои записи
@@ -61,7 +61,7 @@ export default function AuthButton() {
                 setShowDropdown(false)
                 signOut()
               }}
-              className="block w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 transition-colors"
+              className="block w-full text-left px-4 py-3 text-gray-700 hover:bg-gray-100 transition-colors text-sm touch-target"
             >
               Выйти
             </button>
@@ -74,7 +74,7 @@ export default function AuthButton() {
   return (
     <button
       onClick={() => signIn()}
-      className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium"
+      className="px-3 xs:px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors font-medium text-sm xs:text-base touch-target"
     >
       Войти
     </button>

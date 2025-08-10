@@ -38,47 +38,51 @@ export default async function EntryPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <header className="px-8 mb-2 flex items-center justify-between">
-          <Link
-            href="/"
-            className="text-blue-600 hover:text-blue-800 transition-colors"
-          >
-            Новая запись
-          </Link>
-          <div className="flex items-center gap-4">
+      <div className="max-w-6xl mx-auto px-3 xs:px-4 py-4 xs:py-6 md:py-8">
+        <header className="mb-4 xs:mb-6 md:mb-8">
+          <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 xs:gap-4">
             <Link
-              href={`/${id}/raw`}
-              className="text-gray-600 hover:text-gray-800 transition-colors"
+              href="/"
+              className="text-blue-600 hover:text-blue-800 transition-colors text-sm xs:text-base touch-target self-start"
             >
-              Raw
+              ← Новая запись
             </Link>
-            <Link
-              href={`/${id}/edit`}
-              className="text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              Редактировать
-            </Link>
-            {isOwner && (
-              <DeleteEntryButton 
-                entryId={id}
-                className="text-red-600 hover:text-red-800 transition-colors"
-              />
-            )}
-            <AuthButton />
+            <div className="flex items-center gap-2 xs:gap-4 flex-wrap">
+              <Link
+                href={`/${id}/raw`}
+                className="text-gray-600 hover:text-gray-800 transition-colors text-sm xs:text-base touch-target"
+              >
+                Raw
+              </Link>
+              <Link
+                href={`/${id}/edit`}
+                className="text-gray-600 hover:text-gray-800 transition-colors text-sm xs:text-base touch-target"
+              >
+                Редактировать
+              </Link>
+              {isOwner && (
+                <DeleteEntryButton 
+                  entryId={id}
+                  className="text-red-600 hover:text-red-800 transition-colors text-sm xs:text-base touch-target"
+                />
+              )}
+              <AuthButton />
+            </div>
           </div>
         </header>
 
-        <div className="bg-white rounded-lg shadow-sm p-8">
-          <div className="flex items-center justify-between mb-6 text-gray-500">
-            <span>Создано: {new Date(entry.createdAt).toLocaleString('ru-RU')}</span>
+        <div className="bg-white rounded-lg shadow-sm p-4 xs:p-6 md:p-8">
+          <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between mb-4 xs:mb-6 gap-2 xs:gap-4">
+            <span className="text-gray-500 text-xs xs:text-sm">
+              Создано: {new Date(entry.createdAt).toLocaleString('ru-RU')}
+            </span>
             <ViewCounter entryId={id} initialViews={entry.views} />
           </div>
 
           <MarkdownViewer content={entry.content} />
 
           {entry.updatedAt > entry.createdAt && (
-            <div className="mt-8 pt-8 border-t border-gray-300 text-gray-600">
+            <div className="mt-6 xs:mt-8 pt-6 xs:pt-8 border-t border-gray-300 text-gray-600 text-xs xs:text-sm">
               Обновлено: {new Date(entry.updatedAt).toLocaleString('ru-RU')}
             </div>
           )}
