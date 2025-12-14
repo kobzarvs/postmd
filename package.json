@@ -34,7 +34,7 @@
     "markdown-it-multimd-table": "^4.2.3",
     "mermaid": "^11.9.0",
     "nanoid": "^5.1.5",
-    "next": "^15.4.6",
+    "next": "15.4.10",
     "next-auth": "^4.24.11",
     "prisma": "^6.13.0",
     "react": "^19",
