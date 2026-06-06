@@ -30,16 +30,20 @@ export default function EntryForm({ onSubmit, isSubmitting }: EntryFormProps) {
   return (
     <form onSubmit={handleFormSubmit} className="space-y-4">
       <div>
+        <label className="block font-medium text-gray-700 dark:text-gray-300 mb-1 text-sm xs:text-base">
+          Текст записи
+        </label>
         <MarkdownEditor
           value={content}
           onChange={(value) => {
             setContent(value)
             setValue('content', value)
           }}
+          ariaLabel="Текст записи"
           onSubmit={() => handleFormSubmit()}
         />
         {errors.content && (
-          <p className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.content.message}</p>
+          <p role="alert" className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.content.message}</p>
         )}
       </div>
 
@@ -53,10 +57,12 @@ export default function EntryForm({ onSubmit, isSubmitting }: EntryFormProps) {
             type="text"
             id="customUrl"
             placeholder="my-custom-url"
+            aria-invalid={errors.customUrl ? 'true' : 'false'}
+            aria-describedby={errors.customUrl ? 'customUrl-error' : undefined}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm xs:text-base touch-target"
           />
           {errors.customUrl && (
-            <p className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.customUrl.message}</p>
+            <p id="customUrl-error" role="alert" className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.customUrl.message}</p>
           )}
         </div>
 
@@ -69,10 +75,12 @@ export default function EntryForm({ onSubmit, isSubmitting }: EntryFormProps) {
             type="text"
             id="editCode"
             placeholder="secret-edit-code"
+            aria-invalid={errors.editCode ? 'true' : 'false'}
+            aria-describedby={errors.editCode ? 'editCode-error' : undefined}
             className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 text-sm xs:text-base touch-target"
           />
           {errors.editCode && (
-            <p className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.editCode.message}</p>
+            <p id="editCode-error" role="alert" className="text-red-500 dark:text-red-400 mt-1 text-sm">{errors.editCode.message}</p>
           )}
         </div>
       </div>

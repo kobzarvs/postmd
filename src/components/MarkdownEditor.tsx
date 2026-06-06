@@ -16,6 +16,7 @@ interface MarkdownEditorProps {
   value: string
   onChange: (value: string) => void
   placeholder?: string
+  ariaLabel?: string
   onSubmit?: () => void
 }
 
@@ -23,6 +24,7 @@ export default function MarkdownEditor({
   value,
   onChange,
   placeholder = 'Введите текст в формате Markdown...',
+  ariaLabel = 'Текст записи в формате Markdown',
   onSubmit,
 }: MarkdownEditorProps) {
   const [mounted, setMounted] = useState(false)
@@ -59,6 +61,7 @@ export default function MarkdownEditor({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
+          aria-label={ariaLabel}
           className="w-full h-full min-h-[400px] xs:min-h-[500px] outline-none resize-none text-sm xs:text-base bg-transparent"
         />
       </div>
@@ -111,6 +114,7 @@ export default function MarkdownEditor({
             // @ts-expect-error -- MDEditor height expects a number, but we use a responsive CSS string (vh)
             height={getEditorHeight()}
             textareaProps={{ 
+              'aria-label': ariaLabel,
               placeholder, 
               style: { 
                 fontSize: window.innerWidth <= 480 ? 16 : 18,

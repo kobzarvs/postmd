@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">PostMD</title>
+  <desc id="desc">Markdown paste service preview image</desc>
+  <rect width="1200" height="630" fill="#f9fafb"/>
+  <rect x="92" y="76" width="1016" height="478" rx="24" fill="#ffffff" stroke="#d1d5db" stroke-width="3"/>
+  <rect x="132" y="116" width="320" height="42" rx="8" fill="#2563eb"/>
+  <rect x="132" y="196" width="864" height="28" rx="8" fill="#111827"/>
+  <rect x="132" y="252" width="720" height="24" rx="8" fill="#6b7280"/>
+  <rect x="132" y="308" width="796" height="24" rx="8" fill="#6b7280"/>
+  <rect x="132" y="384" width="412" height="64" rx="12" fill="#eff6ff" stroke="#bfdbfe" stroke-width="2"/>
+  <text x="156" y="144" fill="#ffffff" font-family="Arial, Helvetica, sans-serif" font-size="28" font-weight="700">PostMD</text>
+  <text x="132" y="510" fill="#2563eb" font-family="Arial, Helvetica, sans-serif" font-size="40" font-weight="700">Markdown Paste Service</text>
+</svg>

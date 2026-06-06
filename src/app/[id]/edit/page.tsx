@@ -114,7 +114,13 @@ export default function EditPage({ }: PageProps) {
 
         {error && (
           <div className="mb-4 p-3 xs:p-4 bg-red-50 border border-red-200 rounded-md">
-            <p className="text-red-600 text-sm xs:text-base">{error}</p>
+            <p
+              id={error === 'Введите код доступа' ? 'edit-code-error' : undefined}
+              role="alert"
+              className="text-red-600 text-sm xs:text-base"
+            >
+              {error}
+            </p>
           </div>
         )}
 
@@ -151,14 +157,21 @@ export default function EditPage({ }: PageProps) {
             <div className="flex flex-col xs:flex-row xs:items-center gap-3 xs:gap-4 order-1 xs:order-2">
               {/* Показываем поле кода только если пользователь не владелец записи */}
               {!isOwner && (
-                <input
-                  type="text"
-                  id="code"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="Введите код для редактирования"
-                  className="w-full xs:w-72 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm xs:text-base touch-target"
-                />
+                <div className="w-full xs:w-72">
+                  <label htmlFor="code" className="block font-medium text-gray-700 mb-1 text-sm">
+                    Код доступа
+                  </label>
+                  <input
+                    type="text"
+                    id="code"
+                    value={code}
+                    onChange={(e) => setCode(e.target.value)}
+                    placeholder="Введите код для редактирования"
+                    aria-invalid={error === 'Введите код доступа' ? 'true' : 'false'}
+                    aria-describedby={error === 'Введите код доступа' ? 'edit-code-error' : undefined}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm xs:text-base touch-target"
+                  />
+                </div>
               )}
 
               <button
