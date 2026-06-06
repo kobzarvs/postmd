@@ -52,3 +52,7 @@ GEMINI.md
 .roo
 .swarm
 /memory
+AGENTS.md
+.codex
+.claude
+.cursor
